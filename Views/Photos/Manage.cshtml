@@ -1,0 +1,33 @@
+@model PhotoManagementViewModel
+@{ ViewData["Title"] = "Photos - " + Model.Name; }
+<h1 class="h3">Photos: @Model.Name</h1>
+<a class="btn btn-outline-secondary mb-3" asp-controller="@(Model.Input.Target == PhotoTarget.Center ? "CenterProfile" : "ManageActivities")" asp-action="Edit" asp-route-id="@Model.Input.ResourceId">Back to edit</a>
+<form asp-action="Add" method="post" enctype="multipart/form-data" class="card card-body mb-4">
+    <input asp-for="Input.Target" type="hidden" />
+    <input asp-for="Input.ResourceId" type="hidden" />
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <div class="row g-3">
+        <div class="col-md-6"><label asp-for="Input.Files" class="form-label">Upload photos</label><input asp-for="Input.Files" type="file" multiple accept="image/jpeg,image/png,image/webp" class="form-control" /><small class="text-muted">Select multiple photos together. JPEG, PNG or WebP, up to 5 MB each; 20 photos per gallery. Customers can view all photos on the details page.</small></div>
+        <div class="col-md-6"><label asp-for="Input.ImageUrl" class="form-label">Or use an image URL</label><input asp-for="Input.ImageUrl" type="url" class="form-control" placeholder="https://..." /></div>
+        <div class="col-12"><label asp-for="Input.Caption" class="form-label">Caption / alternative text</label><input asp-for="Input.Caption" class="form-control" /></div>
+    </div>
+    <div class="mt-3"><button class="btn btn-primary">Add photos</button><span class="text-muted small ms-3">@Model.Photos.Count / 20 photos</span></div>
+</form>
+<div class="row g-4">
+@foreach(var photo in Model.Photos)
+{
+    <div class="col-sm-6 col-lg-4"><div class="card h-100">
+        <img src="@photo.ImageUrl" alt="@(photo.Caption ?? Model.Name)" class="card-img-top activity-image" loading="lazy" />
+        <div class="card-body">
+            <p>@photo.Caption</p>
+            @if(photo.Id == Model.Photos[0].Id) { <span class="badge text-bg-primary mb-2">Cover photo</span> }
+            <div class="d-flex flex-wrap gap-2">
+                <form asp-action="SetCover" method="post"><input name="target" type="hidden" value="@Model.Input.Target" /><input name="id" type="hidden" value="@Model.Input.ResourceId" /><input name="photoId" type="hidden" value="@photo.Id" /><button class="btn btn-sm btn-outline-primary">Use as cover</button></form>
+                <form asp-action="Delete" method="post" onsubmit="return confirm('Remove this photo?');"><input name="target" type="hidden" value="@Model.Input.Target" /><input name="id" type="hidden" value="@Model.Input.ResourceId" /><input name="photoId" type="hidden" value="@photo.Id" /><button class="btn btn-sm btn-outline-danger">Remove</button></form>
+            </div>
+        </div>
+    </div></div>
+}
+</div>
+@if(!Model.Photos.Any()) { <p class="text-muted">No gallery photos yet. Add your first photo above.</p> }
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

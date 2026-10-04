@@ -1,0 +1,7 @@
+@model List<CenterApplicationViewModel>
+@{ ViewData["Title"]="Owner applications"; }
+<h1 class="h2">Dive school owner applications</h1>
+<div class="table-responsive"><table class="table"><thead><tr><th>School</th><th>Owner</th><th>Location</th><th>Status</th><th></th></tr></thead><tbody>
+@foreach(var item in Model) { <tr><td>@item.Name</td><td>@item.OwnerName<br /><small>@item.Email</small></td><td>@item.City, @item.Country</td><td>@item.Status</td><td><a asp-action="Application" asp-route-id="@item.Id">Review</a></td></tr> }
+</tbody></table></div>
+@if(!Model.Any()) { <p>No applications yet.</p> }

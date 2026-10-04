@@ -1,0 +1,18 @@
+@model CenterApplicationViewModel
+@{ ViewData["Title"]="Review owner application"; }
+<h1 class="h2">@Model.Name</h1>
+<div class="card card-body mb-3"><p><strong>@Model.Status</strong></p><dl class="row">
+<dt class="col-sm-3">Owner</dt><dd class="col-sm-9">@Model.OwnerName</dd>
+<dt class="col-sm-3">Email</dt><dd class="col-sm-9">@Model.Email</dd>
+<dt class="col-sm-3">Phone</dt><dd class="col-sm-9">@Model.Phone</dd>
+<dt class="col-sm-3">Location</dt><dd class="col-sm-9">@Model.City, @Model.Country</dd>
+<dt class="col-sm-3">Address</dt><dd class="col-sm-9">@Model.Address</dd>
+<dt class="col-sm-3">Website</dt><dd class="col-sm-9">@Model.Website</dd>
+<dt class="col-sm-3">About the school</dt><dd class="col-sm-9 preserve-lines">@Model.Description</dd>
+<dt class="col-sm-3">Review notes</dt><dd class="col-sm-9 preserve-lines">@Model.ReviewNotes</dd>
+</dl></div>
+<partial name="_LocationMap" model="@(new MapViewModel {Name=Model.Name,Location=Model.MapLocation})" />
+@if(Model.Status=="Pending") {
+ <form asp-action="ReviewApplication" method="post" class="card card-body mb-3" onsubmit="return confirm('Review this owner application?');"><input name="id" value="@Model.Id" type="hidden" /><label for="notes" class="form-label">Notes for the applicant</label><textarea name="notes" id="notes" maxlength="2000" class="form-control mb-3" rows="3"></textarea><div class="d-flex gap-2"><button name="approve" value="true" class="btn btn-success">Approve school</button><button name="approve" value="false" class="btn btn-outline-danger">Reject</button></div></form>
+}
+<a asp-action="Applications" class="btn btn-outline-secondary">Back to applications</a>

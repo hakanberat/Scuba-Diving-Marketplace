@@ -1,0 +1,17 @@
+@model ActivitySearchViewModel
+@{ ViewData["Title"]="Explore activities"; }
+<div class="page-heading"><p class="eyebrow">Take the plunge</p><h1>Find your next underwater adventure</h1><p>Explore courses, dives and trips. Your next chapter starts here.</p></div>
+<form method="get" class="card card-body filter-panel mb-4">
+ <div asp-validation-summary="All" class="text-danger"></div>
+ <div class="row g-3">
+  <div class="col-md-4"><label asp-for="Search" class="form-label">Search</label><input asp-for="Search" class="form-control" placeholder="Activity or dive center" /></div>
+  <div class="col-md-4"><label asp-for="Country" class="form-label"></label><select asp-for="Country" asp-items="CountryOptions.Get(Model.Country)" class="form-select"><option value="">All countries</option></select></div>
+  <div class="col-md-4"><label asp-for="City" class="form-label"></label><input asp-for="City" class="form-control" /></div>
+  <div class="col-md-4"><label asp-for="CategoryId" class="form-label">Category</label><select asp-for="CategoryId" class="form-select"><option value="">All categories</option>@foreach(var category in Model.Categories) { <option value="@category.Id">@category.Name</option> }</select></div>
+  <div class="col-md-3"><label asp-for="MinPrice" class="form-label">Min price</label><input asp-for="MinPrice" type="number" step="0.01" class="form-control" /></div>
+  <div class="col-md-3"><label asp-for="MaxPrice" class="form-label">Max price</label><input asp-for="MaxPrice" type="number" step="0.01" class="form-control" /></div>
+  <div class="col-md-2 d-flex align-items-end"><button class="btn btn-primary w-100">Search</button></div>
+ </div>
+ <div class="mt-2"><a asp-action="Index">Clear filters</a><small class="text-muted ms-3">Prices are shown in each activity's currency.</small></div>
+</form>
+<partial name="_ActivityCards" model="Model.Activities" />

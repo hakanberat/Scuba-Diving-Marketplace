@@ -1,0 +1,29 @@
+@model OwnerRegistrationViewModel
+@{ ViewData["Title"]="Dive center owner application"; }
+<div class="page-heading"><p class="eyebrow">For dive center owners</p><h1>Bring your dive school onboard</h1><p>Create your owner account and submit your school for admin approval.</p></div>
+<form asp-action="RegisterOwner" method="post" class="card card-body">
+ <div asp-validation-summary="All" class="text-danger"></div>
+ <h2 class="h4">Owner account</h2>
+ <div class="row g-3 mb-4">
+  <div class="col-md-6"><label asp-for="FirstName" class="form-label">First name</label><input asp-for="FirstName" class="form-control" autocomplete="given-name" /></div>
+  <div class="col-md-6"><label asp-for="LastName" class="form-label">Last name</label><input asp-for="LastName" class="form-control" autocomplete="family-name" /></div>
+  <div class="col-md-6"><label asp-for="Email" class="form-label"></label><input asp-for="Email" class="form-control" autocomplete="email" /></div>
+  <div class="col-md-6"><label asp-for="Phone" class="form-label"></label><input asp-for="Phone" class="form-control" /></div>
+  <div class="col-md-6"><label asp-for="Password" class="form-label"></label><input asp-for="Password" class="form-control" autocomplete="new-password" /><small class="text-muted">10-128 characters.</small></div>
+  <div class="col-md-6"><label asp-for="ConfirmPassword" class="form-label">Confirm password</label><input asp-for="ConfirmPassword" class="form-control" autocomplete="new-password" /></div>
+ </div>
+ <h2 class="h4">Dive school details</h2>
+ <div class="row g-3">
+  <div class="col-12"><label asp-for="CenterName" class="form-label">Dive school name</label><input asp-for="CenterName" class="form-control" /></div>
+  <div class="col-md-6"><label asp-for="Country" class="form-label"></label><select asp-for="Country" asp-items="CountryOptions.Get(Model.Country)" class="form-select"><option value="">Select country</option></select></div>
+  <div class="col-md-6"><label asp-for="City" class="form-label"></label><input asp-for="City" class="form-control" /></div>
+  <div class="col-12"><label asp-for="Address" class="form-label"></label><input asp-for="Address" class="form-control" /></div>
+  <div class="col-12"><label asp-for="Website" class="form-label"></label><input asp-for="Website" type="text" class="form-control" placeholder="www.example.com (optional)" /><span asp-validation-for="Website" class="text-danger"></span></div>
+  <div class="col-12"><label asp-for="MapLocation" class="form-label">Google Maps link / location</label><input asp-for="MapLocation" class="form-control" placeholder="Google Maps share link or precise address" /><span asp-validation-for="MapLocation" class="text-danger"></span></div>
+  <div class="col-12"><label asp-for="Description" class="form-label">About your school</label><textarea asp-for="Description" class="form-control" rows="4"></textarea></div>
+ </div>
+ <p class="text-muted small mt-3">Your school is published and management access is enabled after admin approval. Track the application by logging into your owner account.</p>
+ <div><button class="btn btn-primary">Submit owner application</button></div>
+</form>
+<p class="mt-3">Looking to book a dive? <a asp-action="Register">Register as a customer</a>.</p>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

@@ -1,0 +1,7 @@
+@model CategoryEditViewModel
+@{ ViewData["Title"]="Edit category"; }
+<h1 class="h2">@(Model.Id==0 ? "Add category" : "Edit category")</h1>
+<form asp-action="EditCategory" asp-route-id="@Model.Id" method="post" class="card card-body"><input asp-for="Id" type="hidden" /><div asp-validation-summary="All" class="text-danger"></div><div class="mb-3"><label asp-for="Name" class="form-label">Name</label><input asp-for="Name" class="form-control" /><span asp-validation-for="Name" class="text-danger"></span></div>
+<div class="mb-3"><label asp-for="Slug" class="form-label">Slug</label><input asp-for="Slug" class="form-control" /><span asp-validation-for="Slug" class="text-danger"></span></div>
+<div class="form-check mb-3"><input asp-for="IsActive" class="form-check-input" /><label asp-for="IsActive" class="form-check-label">Is Active</label></div>
+<button class="btn btn-primary">Save</button></form>

@@ -1,0 +1,39 @@
+@model HomeViewModel
+@{ ViewData["Title"] = "Discover Your Next Dive"; }
+<section class="marketplace-hero">
+ <div class="hero-content">
+  <p class="eyebrow">A world waiting beneath the surface</p>
+  <h1>Discover your<br />next <span>dive.</span></h1>
+  <p class="hero-description">From your first breath underwater to your next great adventure. Explore courses, dives and trips with local dive centers.</p>
+  <form asp-controller="Activities" asp-action="Index" method="get" class="hero-search">
+   <div><label for="home-search">What would you like to explore?</label><input id="home-search" name="Search" placeholder="Course, wreck dive, dive center..." /></div>
+   <div><label for="home-country">Destination</label><select id="home-country" name="Country" class="form-select"><option value="">All countries</option>@foreach(var country in CountryOptions.Get()) { <option value="@country.Value">@country.Text</option> }</select></div>
+   <button class="btn btn-primary">Find your dive <span aria-hidden="true">&rarr;</span></button>
+  </form>
+  <p class="hero-footnote">Browse freely. Create an account when you are ready to reserve.</p>
+ </div>
+ <div class="hero-brand" aria-hidden="true"><div class="hero-orbit"></div><img src="~/images/brand/divehub-logo.png" alt="" /><span>Explore deeper.<br />Experience more.</span></div>
+</section>
+<div class="discovery-benefits mb-5">
+ <div><span class="benefit-number">01</span><div><strong>Find your adventure</strong><p>Courses, dives, tours and rentals.</p></div></div>
+ <div><span class="benefit-number">02</span><div><strong>Meet your dive center</strong><p>Explore profiles and instructors.</p></div></div>
+ <div><span class="benefit-number">03</span><div><strong>Reserve with confidence</strong><p>Send a request. Get center confirmation.</p></div></div>
+</div>
+<section class="discovery-section">
+ <div class="section-heading"><div><p class="eyebrow">Go somewhere unforgettable</p><h2>Fresh adventures to explore</h2></div><a asp-controller="Activities" asp-action="Index" class="section-link">Explore all activities &rarr;</a></div>
+ <partial name="_ActivityCards" model="Model.Activities" />
+</section>
+<section class="discovery-section category-section">
+ <div class="section-heading"><div><p class="eyebrow">Your pace. Your passion.</p><h2>Find your kind of dive</h2></div></div>
+ <div class="category-grid">
+ @foreach(var category in Model.Categories) { <a class="category-tile" asp-controller="Activities" asp-action="Index" asp-route-categoryId="@category.Id"><span>@category.Name</span><span aria-hidden="true">&nearr;</span></a> }
+ </div>
+</section>
+<section class="discovery-section">
+ <div class="section-heading"><div><p class="eyebrow">The people behind the experience</p><h2>Meet the dive centers</h2></div><a class="section-link" asp-controller="DiveCenters" asp-action="Index">All dive centers &rarr;</a></div>
+ <partial name="_DiveCenterCards" model="Model.Centers" />
+</section>
+<section class="partner-banner">
+ <div><p class="eyebrow">For dive centers</p><h2>Your expertise.<br />Their next adventure.</h2><p>Showcase your center, publish your activities and welcome your next divers.</p></div>
+ <a class="btn btn-light" asp-controller="Account" asp-action="RegisterOwner">List your dive center &rarr;</a>
+</section>

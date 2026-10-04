@@ -1,0 +1,8 @@
+@model CenterApplicationViewModel
+@{ ViewData["Title"]="My school application"; }
+<h1 class="h2">My school application</h1>
+<div class="card card-body"><h2 class="h4">@Model.Name</h2><p>@Model.City, @Model.Country</p><p>Status: <strong>@Model.Status</strong></p>
+@if(Model.Status=="Pending") { <p>Your application is awaiting admin review. Your school is not public yet.</p> }
+@if(!string.IsNullOrWhiteSpace(Model.ReviewNotes)) { <p class="preserve-lines">@Model.ReviewNotes</p> }
+@if(Model.Status=="Approved") { <div><a class="btn btn-primary" asp-controller="Dashboard" asp-action="Index">Go to your dashboard</a></div> }
+</div>

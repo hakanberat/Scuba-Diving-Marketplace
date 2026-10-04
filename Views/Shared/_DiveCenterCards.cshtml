@@ -1,0 +1,12 @@
+@model IEnumerable<DiveCenter>
+<div class="row g-4">
+@foreach(var center in Model)
+{
+ <div class="col-sm-6 col-lg-4"><article class="card experience-card center-card h-100">
+  @if(!string.IsNullOrWhiteSpace(center.CoverPhotoUrl ?? center.LogoUrl)) { <img src="@(center.CoverPhotoUrl ?? center.LogoUrl)" alt="@center.Name" class="card-img-top activity-image" loading="lazy" /> }
+  else { <div class="center-placeholder"><span aria-hidden="true">&sim;</span><span>Meet your local dive experts</span></div> }
+  <div class="card-body"><p class="card-location">@center.City / @center.Country</p><h3 class="h5"><a class="stretched-link text-decoration-none" asp-controller="DiveCenters" asp-action="Details" asp-route-id="@center.Id">@center.Name</a></h3><p class="card-description">@center.Description</p><span class="section-link">Explore center &rarr;</span></div>
+ </article></div>
+}
+</div>
+@if(!Model.Any()) { <div class="empty-state"><p>No dive centers listed yet.</p></div> }

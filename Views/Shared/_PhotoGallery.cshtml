@@ -1,0 +1,21 @@
+@model List<Photo>
+@if(Model.Any())
+{
+    <div class="row g-3 mb-4">
+    @foreach(var photo in Model)
+    {
+        <div class="@(photo.Id == Model[0].Id ? "col-12" : "col-6 col-md-4")">
+            <button type="button" class="border-0 bg-transparent p-0 w-100" data-bs-toggle="modal" data-bs-target="#photo-@photo.Id" aria-label="Enlarge photo">
+                <img src="@photo.ImageUrl" alt="@(photo.Caption ?? "Gallery photo")" class="img-fluid rounded w-100 @(photo.Id == Model[0].Id ? "activity-detail-image" : "activity-image")" loading="lazy" />
+            </button>
+            @if(!string.IsNullOrWhiteSpace(photo.Caption)) { <p class="small text-muted mt-1">@photo.Caption</p> }
+        </div>
+        <div class="modal fade" id="photo-@photo.Id" tabindex="-1" aria-label="Photo preview" aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-centered"><div class="modal-content">
+                <div class="modal-header"><span class="modal-title">@(photo.Caption ?? "Photo")</span><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button></div>
+                <div class="modal-body text-center"><img src="@photo.ImageUrl" alt="@(photo.Caption ?? "Gallery photo")" class="img-fluid" loading="lazy" /></div>
+            </div></div>
+        </div>
+    }
+    </div>
+}

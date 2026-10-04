@@ -1,0 +1,17 @@
+@model List<ReservationRevenueViewModel>
+<section class="mb-4" aria-labelledby="reservation-revenue-heading">
+ <h2 id="reservation-revenue-heading" class="h4">Reservation revenue</h2>
+ <p class="text-muted">All-time confirmed booking value, before any fees. Payments are not tracked yet; these amounts do not indicate money received. Pending amounts are shown separately. Rejected and cancelled bookings are excluded.</p>
+ @if(Model.Any()) {
+  <div class="row g-3 mb-3">
+  @foreach(var currency in Model.GroupBy(x=>x.CurrencyCode).OrderBy(x=>x.Key)) {
+   <div class="col-sm-6 col-lg-4"><div class="card card-body h-100"><span>Confirmed reservations · @currency.Key</span><strong class="h3 my-2">@currency.Sum(x=>x.ConfirmedAmount).ToString("N2") @currency.Key</strong><small class="text-muted">Pending: @currency.Sum(x=>x.PendingAmount).ToString("N2") @currency.Key</small></div></div>
+  }
+  </div>
+  <div class="table-responsive"><table class="table align-middle"><thead><tr><th>Dive center</th><th>Currency</th><th>Confirmed bookings</th><th>Confirmed value</th><th>Pending value</th></tr></thead><tbody>
+  @foreach(var row in Model) {
+   <tr><td>@row.CenterName</td><td>@row.CurrencyCode</td><td>@row.ConfirmedCount</td><td>@row.ConfirmedAmount.ToString("N2") @row.CurrencyCode</td><td>@row.PendingAmount.ToString("N2") @row.CurrencyCode</td></tr>
+  }
+  </tbody></table></div>
+ } else { <div class="card card-body text-muted">No reservation amounts to show yet.</div> }
+</section>

@@ -1,0 +1,29 @@
+@model Reservation
+@{ ViewData["Title"]=Model.ReservationNumber; var manager=User.IsInRole("DiveCenter") || User.IsInRole("Admin"); }
+<h1 class="h3 text-break">@Model.ReservationNumber</h1>
+<partial name="_ReservationStatus" model="Model.Status" /><div class="mt-3"><partial name="_ReservationContact" model="Model" /></div>
+<div class="card card-body mt-3 mb-4">
+ <h2 class="h4">@Model.ActivityName</h2><p>@Model.DiveCenterName</p>
+ <dl class="row">
+  <dt class="col-sm-4">Customer</dt><dd class="col-sm-8">@Model.CustomerName</dd>
+  <dt class="col-sm-4">Date</dt><dd class="col-sm-8">@Model.ReservationDate.ToString("dd MMM yyyy")</dd>
+  <dt class="col-sm-4">Participants</dt><dd class="col-sm-8">@Model.Participants</dd>
+  <dt class="col-sm-4">Unit price at booking</dt><dd class="col-sm-8">@Model.UnitPrice.ToString("N2") @Model.CurrencyCode</dd>
+  <dt class="col-sm-4">Total</dt><dd class="col-sm-8 fw-bold">@Model.TotalPrice.ToString("N2") @Model.CurrencyCode</dd>
+  <dt class="col-sm-4">Customer notes</dt><dd class="col-sm-8 preserve-lines">@Model.CustomerNotes</dd>
+  <dt class="col-sm-4">Dive center notes</dt><dd class="col-sm-8 preserve-lines">@Model.DiveCenterNotes</dd>
+  <dt class="col-sm-4">Created (UTC)</dt><dd class="col-sm-8">@Model.CreatedAt.ToString("dd MMM yyyy HH:mm")</dd>
+ </dl>
+</div>
+@if(Model.Status is "Pending" or "Confirmed")
+{
+ <form asp-action="ChangeStatus" method="post" class="card card-body mb-4" onsubmit="return confirm('Update this reservation status?');">
+  <input type="hidden" name="id" value="@Model.Id" />
+  @if(manager) { <label for="notes" class="form-label">Note to the customer</label><textarea id="notes" name="notes" class="form-control mb-3" maxlength="2000">@Model.DiveCenterNotes</textarea> }
+  <div class="d-flex flex-wrap gap-2">
+  @if(manager && Model.Status=="Pending") { <button class="btn btn-success" name="status" value="Confirmed">Confirm reservation</button><button class="btn btn-outline-danger" name="status" value="Rejected">Reject reservation</button> }
+  <button class="btn btn-danger" name="status" value="Cancelled">Cancel reservation</button>
+  </div>
+ </form>
+}
+<a asp-action="@(manager ? "Index" : "MyReservations")" class="btn btn-outline-secondary">Back to reservations</a>

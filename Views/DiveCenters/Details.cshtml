@@ -1,0 +1,67 @@
+@model DiveCenterDetailsViewModel
+
+@{
+    ViewData["Title"] = Model.Center.Name;
+}
+
+<div class="container mt-4">
+    <a asp-action="Index" class="btn btn-outline-secondary mb-4">Back to dive centers</a>
+    <partial name="_PhotoGallery" model="Model.Photos" />
+
+    <div class="card shadow-sm">
+        <div class="card-body p-4">
+            <div class="row g-4">
+                @if (!string.IsNullOrWhiteSpace(Model.Center.LogoUrl))
+                {
+                    <div class="col-md-3">
+                        <img src="@Model.Center.LogoUrl" alt="@(Model.Center.Name) logo"
+                             class="img-fluid rounded" />
+                    </div>
+                }
+
+                <div class="col">
+                    <h1 class="mb-3">@Model.Center.Name</h1>
+                    <p class="mb-4" style="white-space: pre-line;">@Model.Center.Description</p>
+
+                    <dl class="row mb-0">
+                        <dt class="col-sm-3">City</dt>
+                        <dd class="col-sm-9">@Model.Center.City</dd>
+
+                        <dt class="col-sm-3">Country</dt>
+                        <dd class="col-sm-9">@Model.Center.Country</dd>
+
+                        <dt class="col-sm-3">Address</dt>
+                        <dd class="col-sm-9">@Model.Center.Address</dd>
+
+                        <dt class="col-sm-3">Phone</dt>
+                        <dd class="col-sm-9">@Model.Center.Phone</dd>
+
+                        <dt class="col-sm-3">Email</dt>
+                        <dd class="col-sm-9 text-break">@Model.Center.Email</dd>
+
+                        <dt class="col-sm-3">Website</dt>
+                        <dd class="col-sm-9 text-break">@Model.Center.Website</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<partial name="_LocationMap" model="@(new MapViewModel { Name=Model.Center.Name, Location=string.IsNullOrWhiteSpace(Model.Center.MapLocation) ? MapViewModel.Resolve(Model.Center.Address,Model.Center.City,Model.Center.Country) : Model.Center.MapLocation })" />
+<section class="mt-5 mb-4">
+ <h2 class="h3">Meet the instructors</h2>
+ <div class="row g-3">
+ @foreach(var instructor in Model.Instructors)
+ {
+  <div class="col-sm-6 col-lg-4"><div class="card card-body h-100">
+   @if(!string.IsNullOrWhiteSpace(instructor.PhotoUrl)) { <img src="@instructor.PhotoUrl" alt="@instructor.FirstName @instructor.LastName" class="img-fluid rounded mb-3 activity-image" loading="lazy" /> }
+   <h3 class="h5">@instructor.FirstName @instructor.LastName</h3><p class="text-muted">@instructor.CertificationAgency · @instructor.InstructorNumber</p><p class="preserve-lines">@instructor.Bio</p>
+  </div></div>
+ }
+ </div>
+ @if(!Model.Instructors.Any()) { <p class="text-muted">No instructors listed yet.</p> }
+</section>
+<section class="mt-5">
+ <h2 class="h3 mb-3">Activities from @Model.Center.Name</h2>
+ <partial name="_ActivityCards" model="Model.Activities" />
+</section>

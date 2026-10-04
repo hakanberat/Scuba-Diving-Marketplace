@@ -1,0 +1,24 @@
+@model ActivityDetailsViewModel
+@{ ViewData["Title"]=Model.Activity.Name; }
+<a asp-action="Index" class="btn btn-outline-secondary mb-3">Back to activities</a>
+<div class="row g-4">
+ <div class="col-lg-8">
+ @if(Model.Photos.Any()) { <partial name="_PhotoGallery" model="Model.Photos" /> }
+ else if(!string.IsNullOrWhiteSpace(Model.Activity.MainImageUrl)) { <img src="@Model.Activity.MainImageUrl" alt="@Model.Activity.Name" class="img-fluid rounded mb-4 w-100 activity-detail-image" /> }
+ <span class="badge text-bg-info mb-2">@Model.Activity.CategoryName</span>
+ <h1>@Model.Activity.Name</h1>
+ <p><a asp-controller="DiveCenters" asp-action="Details" asp-route-id="@Model.Activity.DiveCenterId">@Model.Activity.DiveCenterName</a> · @Model.Activity.City, @Model.Activity.Country</p>
+ <p class="lead">@Model.Activity.ShortDescription</p>
+ <p class="preserve-lines">@Model.Activity.Description</p>
+<partial name="_LocationMap" model="@(new MapViewModel { Name=Model.Activity.Name, Location=string.IsNullOrWhiteSpace(Model.Activity.MapLocation) ? MapViewModel.Resolve(Model.Activity.Location,Model.Activity.City,Model.Activity.Country) : Model.Activity.MapLocation })" />
+ <h2 class="h5 mt-4">Included</h2><p class="preserve-lines">@Model.Activity.Included</p>
+ <h2 class="h5">Not included</h2><p class="preserve-lines">@Model.Activity.NotIncluded</p>
+ <h2 class="h5">Requirements</h2><p class="preserve-lines">@Model.Activity.Requirements</p>
+ </div>
+ <aside class="col-lg-4"><div class="card shadow-sm"><div class="card-body">
+  <h2 class="h3">@Model.Activity.Price.ToString("N2") @Model.Activity.CurrencyCode</h2><p class="text-muted">Per participant</p>
+  <dl><dt>Location</dt><dd>@Model.Activity.Location</dd><dt>Duration</dt><dd>@Model.Activity.Duration</dd><dt>Minimum age</dt><dd>@(Model.Activity.MinimumAge?.ToString() ?? "Not specified")</dd><dt>Required certification</dt><dd>@(Model.Activity.MinimumCertification ?? "Not specified")</dd><dt>Maximum participants</dt><dd>@(Model.Activity.MaxParticipants?.ToString() ?? "Not specified")</dd></dl>
+  <a class="btn btn-primary w-100" asp-controller="Reservations" asp-action="Create" asp-route-activityId="@Model.Activity.Id">Reserve this activity</a>
+  <p class="small text-muted mt-3 mb-0">Your request is sent to the dive center for confirmation. No online payment is collected.</p>
+ </div></div></aside>
+</div>

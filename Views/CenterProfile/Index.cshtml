@@ -1,0 +1,8 @@
+@model List<DiveCenter>
+@{ ViewData["Title"]="My dive center profiles"; }
+<h1 class="h2">My dive center profiles</h1>
+@if(User.IsInRole("Admin")) { <a class="btn btn-primary mb-3" asp-action="Create">Create dive center</a> }
+<div class="row g-3">
+@foreach(var center in Model) { <div class="col-md-6"><div class="card card-body"><h2 class="h4">@center.Name</h2><p>@center.City, @center.Country · @(center.IsActive ? "Active" : "Inactive")</p><a class="btn btn-outline-primary" asp-action="Edit" asp-route-id="@center.Id">Edit profile</a></div></div> }
+</div>
+@if(!Model.Any()) { <p>No dive centers assigned yet.</p> }

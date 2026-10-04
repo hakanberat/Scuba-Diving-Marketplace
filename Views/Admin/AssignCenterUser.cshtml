@@ -1,0 +1,11 @@
+@model CenterUserViewModel
+@{ ViewData["Title"]="Assign center access"; }
+<h1 class="h2">Assign center access</h1>
+<p>Set the user's role to DiveCenter in Users first. Existing mappings are updated.</p>
+<form asp-action="AssignCenterUser" method="post" class="card card-body">
+ <div asp-validation-summary="All" class="text-danger"></div>
+ <div class="mb-3"><label asp-for="DiveCenterId" class="form-label">Dive center</label><select asp-for="DiveCenterId" class="form-select"><option value="">Select center</option>@foreach(var center in Model.Centers) { <option value="@center.Id">@center.Name</option> }</select></div>
+ <div class="mb-3"><label asp-for="AppUserId" class="form-label">Dive center user</label><select asp-for="AppUserId" class="form-select"><option value="">Select user</option>@foreach(var user in Model.Users) { <option value="@user.Id">@user.Email</option> }</select></div>
+ <div class="form-check mb-3"><input asp-for="IsOwner" class="form-check-input" /><label asp-for="IsOwner" class="form-check-label">Owner (members also have management access)</label></div>
+ <button class="btn btn-primary">Assign access</button>
+</form>

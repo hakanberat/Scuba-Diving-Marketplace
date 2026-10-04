@@ -1,0 +1,16 @@
+@model AdminOverviewViewModel
+@{ ViewData["Title"]="Administration"; }
+<h1>Administration</h1><p>Manage marketplace records and dive center access.</p>
+<div id="owner-application-alert" class="@(Model.PendingApplications > 0 ? "alert alert-danger" : "card card-body") mb-4" role="status">
+ <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+  <div><strong>School owner applications <span class="badge @(Model.PendingApplications > 0 ? "text-bg-danger" : "text-bg-secondary")">@Model.PendingApplications</span></strong><p class="mb-0 small">@(Model.PendingApplications > 0 ? "New school owners are waiting for your review." : "No active school applications awaiting review.")</p></div>
+  <a class="btn @(Model.PendingApplications > 0 ? "btn-danger" : "btn-outline-primary")" asp-action="Applications">Show owner applications &rarr;</a>
+ </div>
+</div>
+<partial name="_ReservationRevenue" model="Model.Revenue" />
+<div class="row g-3 mb-4">
+@foreach(var metric in new[]{("Dive centers",Model.Centers),("Users",Model.Users),("School owners",Model.Owners),("Activities",Model.Activities),("Reservations",Model.Reservations)})
+{
+ <div class="col-sm-6 col-lg"><div class="card card-body"><span>@metric.Item1</span><strong class="display-6">@metric.Item2</strong></div></div>
+}
+</div>

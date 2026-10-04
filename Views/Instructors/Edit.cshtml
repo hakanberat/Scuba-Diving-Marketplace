@@ -1,0 +1,14 @@
+@model InstructorEditViewModel
+@{ var action=Model.Id==0 ? "Create" : "Edit"; ViewData["Title"]=action; }
+<h1 class="h2">@action</h1>
+<form asp-action="@action" asp-route-id="@Model.Id" method="post" class="card card-body">
+<input asp-for="Id" type="hidden" /><div asp-validation-summary="All" class="text-danger"></div><div class="mb-3"><label asp-for="DiveCenterId" class="form-label">Dive center</label><select asp-for="DiveCenterId" class="form-select"><option value="">Select center</option>@foreach(var center in Model.Centers) { <option value="@center.Id">@center.Name</option> }</select></div><div class="mb-3"><label asp-for="FirstName" class="form-label">First Name</label><input asp-for="FirstName" class="form-control" /><span asp-validation-for="FirstName" class="text-danger"></span></div>
+<div class="mb-3"><label asp-for="LastName" class="form-label">Last Name</label><input asp-for="LastName" class="form-control" /><span asp-validation-for="LastName" class="text-danger"></span></div>
+<div class="mb-3"><label asp-for="Bio" class="form-label">Bio</label><textarea asp-for="Bio" class="form-control" rows="4"></textarea><span asp-validation-for="Bio" class="text-danger"></span></div>
+<div class="mb-3"><label asp-for="PhotoUrl" class="form-label">Photo Url</label><input asp-for="PhotoUrl" class="form-control" /><span asp-validation-for="PhotoUrl" class="text-danger"></span></div>
+<div class="mb-3"><label asp-for="CertificationAgency" class="form-label">Certification Agency</label><input asp-for="CertificationAgency" class="form-control" /><span asp-validation-for="CertificationAgency" class="text-danger"></span></div>
+<div class="mb-3"><label asp-for="InstructorNumber" class="form-label">Instructor Number</label><input asp-for="InstructorNumber" class="form-control" /><span asp-validation-for="InstructorNumber" class="text-danger"></span></div>
+<div class="form-check mb-3"><input asp-for="IsActive" class="form-check-input" /><label asp-for="IsActive" class="form-check-label">Is Active</label></div>
+<div><button class="btn btn-primary">Save</button><a asp-action="Index" class="btn btn-outline-secondary ms-2">Back</a></div>
+</form>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }
