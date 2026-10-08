@@ -1,8 +1,8 @@
 @model ReservationCreateViewModel
 @{ ViewData["Title"]="Request reservation"; }
-<div class="row g-4"><div class="col-lg-7">
-<h1 class="h2">Request your reservation</h1>
-<form asp-action="Create" method="post" class="card card-body">
+<div class="journey-heading"><p class="eyebrow">Your next underwater adventure</p><h1>Make a plan to dive.</h1><p class="text-muted">Choose your date and group. Your dive center will confirm the details.</p></div>
+<div class="row g-5"><div class="col-lg-7">
+<form asp-action="Create" method="post" class="card card-body reservation-form">
  <input asp-for="ActivityId" type="hidden" />
  <div asp-validation-summary="All" class="text-danger"></div>
  <div class="mb-3"><label asp-for="ReservationDate" class="form-label">Date</label><input asp-for="ReservationDate" class="form-control" type="date" min="@DateTime.Today.ToString("yyyy-MM-dd")" /></div>
@@ -25,10 +25,17 @@
  </fieldset>
  <button class="btn btn-primary">Submit reservation request</button>
 </form>
-</div><aside class="col-lg-5"><div class="card card-body bg-light">
- <h2 class="h4">@Model.Activity?.Name</h2><p>@Model.Activity?.DiveCenterName</p>
- <p class="fw-semibold">@Model.Activity?.Price.ToString("N2") @Model.Activity?.CurrencyCode per participant</p>
- <p>Total is the current unit price multiplied by your participant count. The final snapshot appears on your reservation.</p>
- <p class="small mb-0">The dive center reviews your request. No online payment is collected.</p>
+</div><aside class="col-lg-5"><div class="reservation-summary">
+ @if(!string.IsNullOrWhiteSpace(Model.Activity?.DisplayImageUrl)) { <img class="reservation-summary-image" src="@Model.Activity.DisplayImageUrl" alt="@Model.Activity.Name" /> }
+ else { <div class="reservation-summary-image media-fallback"><span>Your next dive awaits</span></div> }
+ <div class="reservation-summary-body">
+ <p class="card-location">@Model.Activity?.City &middot; @Model.Activity?.Country</p>
+ <h2>@Model.Activity?.Name</h2><p class="text-muted">With @Model.Activity?.DiveCenterName</p>
+ <p class="fw-semibold">@Model.Activity?.Price.ToString("N2") @Model.Activity?.CurrencyCode <small class="text-muted">per participant</small></p>
+ <div class="booking-facts"><div><span>Your date</span><strong id="reservation-date-summary">@Model.ReservationDate.ToString("dd MMM yyyy")</strong></div><div><span>Participants</span><strong id="reservation-participants-summary">@Model.Participants</strong></div></div>
+ <div class="estimate-row"><span>Estimated total</span><strong><span id="reservation-estimate" data-unit-price="@(Model.Activity?.Price.ToString(System.Globalization.CultureInfo.InvariantCulture))">@((Model.Activity?.Price * Model.Participants)?.ToString("N2"))</span> @Model.Activity?.CurrencyCode</strong></div>
+ <p class="small text-muted mt-3">Estimated from the current price. Your reservation will show the price recorded when you submit your request.</p>
+ <p class="booking-note">No online payment. The dive center reviews and confirms your request.</p>
+ </div>
 </div></aside></div>
 @section Scripts { <partial name="_ValidationScriptsPartial" /> }

@@ -3,8 +3,8 @@
 {
  var query=Uri.EscapeDataString(Model.EmbedQuery);
  var link=Model.GoogleLink ?? "https://www.google.com/maps/search/?api=1&query="+query;
- <section class="card my-4">
+ <section class="card my-4 location-section">
   <div class="card-body"><div class="d-flex flex-wrap justify-content-between gap-2"><h2 class="h5">Location</h2><a href="@link" target="_blank" rel="noopener noreferrer">Open in Google Maps &nearr;</a></div><p class="text-muted mb-0">@Model.Location</p>@if(Model.GoogleLink is not null && Model.EmbedQuery==Model.Name) { <small class="text-muted">Map preview searches the school name. Open the shared link for its exact pin.</small> }</div>
-  <iframe src="https://maps.google.com/maps?q=@query&amp;z=14&amp;output=embed" title="@Model.Name location on Google Maps" width="100%" height="340" style="border:0" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  <iframe src="https://maps.google.com/maps?q=@query&amp;z=14&amp;output=embed" title="@Model.Name location on Google Maps" width="100%" height="340" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
  </section>
 }

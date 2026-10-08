@@ -1,5 +1,11 @@
 @using System.Security.Claims
 @inject DiveMarketplace.Services.NotificationService NotificationService
+@{
+ var controller=ViewContext.RouteData.Values["controller"]?.ToString();
+ var action=ViewContext.RouteData.Values["action"]?.ToString();
+ var management=new[]{"Admin","Dashboard","ManageActivities","Instructors","CenterProfile","Photos","Notifications"}.Contains(controller)
+  || (controller=="Reservations" && (action=="Index" || User.IsInRole("Admin") || User.IsInRole("DiveCenter")));
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,16 +14,16 @@
  <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
  <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
-<body>
+<body class="@(management ? "management-site" : "public-site")">
+<a class="skip-link" href="#main-content">Skip to content</a>
 <header>
  <nav class="navbar navbar-expand-lg navbar-light site-nav">
  <div class="container">
-  <a class="navbar-brand brand-lockup" asp-controller="Home" asp-action="Index"><img src="~/images/brand/divehub-logo.png" alt="Dive Hub" /><span>DiveMarketplace<small>Discover. Reserve. Dive.</small></span></a>
+  <a class="navbar-brand brand-lockup" asp-controller="Home" asp-action="Index"><svg class="brand-mark" viewBox="0 0 40 40" fill="none" aria-hidden="true"><path d="M7 9h11c10 0 15 5 15 11s-5 11-15 11H7V9Z" stroke="currentColor" stroke-width="3"/><path d="M7 23c5-7 9 5 15-2s9-3 11-1" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg><span>Dive<span class="brand-accent">Marketplace</span></span></a>
   <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-nav" aria-controls="main-nav" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
   <div class="collapse navbar-collapse" id="main-nav">
    <ul class="navbar-nav me-auto">
-    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Home</a></li>
-    <li class="nav-item"><a class="nav-link" asp-controller="Activities" asp-action="Index">Activities</a></li>
+    <li class="nav-item"><a class="nav-link" asp-controller="Activities" asp-action="Index">Explore</a></li>
     <li class="nav-item"><a class="nav-link" asp-controller="DiveCenters" asp-action="Index">Dive Centers</a></li>
     @if(User.IsInRole("Customer")) { <li class="nav-item"><a class="nav-link" asp-controller="Reservations" asp-action="MyReservations">My Reservations</a></li> }
     @if(User.IsInRole("DiveCenter"))
@@ -40,20 +46,20 @@
      <partial name="_NotificationIndicator" model="@(await NotificationService.GetIndicatorAsync(int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!),User.IsInRole("Admin")))" /><a class="btn btn-outline-primary btn-sm" asp-controller="Account" asp-action="Profile">@User.Identity.Name</a>
      <form asp-controller="Account" asp-action="Logout" method="post"><button class="btn btn-outline-secondary btn-sm">Logout</button></form>
     }
-    else { <a class="btn btn-outline-primary btn-sm" asp-controller="Account" asp-action="Login">Login</a><a class="btn btn-primary btn-sm" asp-controller="Account" asp-action="Register">Register</a> }
+    else { <a class="nav-link partner-nav" asp-controller="Account" asp-action="RegisterOwner">List your dive center</a><a class="btn btn-link btn-sm" asp-controller="Account" asp-action="Login">Log in</a><a class="btn btn-primary btn-sm" asp-controller="Account" asp-action="Register">Sign up</a> }
    </div>
   </div>
  </div>
  </nav>
 </header>
 <div class="container flex-grow-1 site-content">
- <main role="main" class="pb-5">
+ <main id="main-content" class="pb-5" tabindex="-1">
  @if(TempData["Success"] is string success) { <div class="alert alert-success" role="status">@success</div> }
- <partial name="_ManagementNavigation" />
+ @if(management) { <partial name="_ManagementNavigation" /> }
  @RenderBody()
  </main>
 </div>
-<footer class="site-footer mt-auto"><div class="container"><div class="footer-top"><div class="footer-brand"><span>DiveMarketplace</span><p>A little curiosity. A whole new world.</p></div><div class="footer-links"><a asp-controller="Activities" asp-action="Index">Explore activities</a><a asp-controller="DiveCenters" asp-action="Index">Dive centers</a><a asp-controller="Account" asp-action="RegisterOwner">Become a partner</a></div></div><div class="footer-bottom"><span>&copy; @DateTime.Now.Year DiveMarketplace</span><span>Discover, reserve, dive.</span></div></div></footer>
+<footer class="site-footer mt-auto"><div class="container"><div class="footer-top"><div class="footer-brand"><span>DiveMarketplace</span><p>A little curiosity. A whole new world.<br />Find your next adventure beneath the surface.</p></div><nav class="footer-links" aria-label="Footer"><div><strong>Explore</strong><a asp-controller="Activities" asp-action="Index">Diving experiences</a><a asp-controller="DiveCenters" asp-action="Index">Dive centers</a></div><div><strong>For partners</strong><a asp-controller="Account" asp-action="RegisterOwner">List your dive center</a></div><div><strong>Your account</strong>@if(User.Identity?.IsAuthenticated==true) { <a asp-controller="Account" asp-action="Profile">My profile</a> } else { <a asp-controller="Account" asp-action="Login">Log in</a><a asp-controller="Account" asp-action="Register">Sign up</a> }</div></nav></div><div class="footer-bottom"><span>&copy; @DateTime.Now.Year DiveMarketplace</span><span>Explore beneath the surface.</span></div></div></footer>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>

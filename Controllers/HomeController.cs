@@ -10,11 +10,20 @@ public class HomeController(ActivityService activities, ActivityCategoryService 
 {
     public async Task<IActionResult> Index()
     {
+        var experiences=await activities.SearchAsync(new ActivitySearchViewModel());
+        var diveCenters=(await centers.GetAllAsync()).ToList();
+        var destinations=experiences.Select(a=>new DestinationViewModel {Country=a.Country??"",City=a.City,ImageUrl=a.DisplayImageUrl})
+            .Concat(diveCenters.Select(c=>new DestinationViewModel {Country=c.Country??"",City=c.City,ImageUrl=c.CoverPhotoUrl}))
+            .Where(d=>!string.IsNullOrWhiteSpace(d.Country))
+            .GroupBy(d=>new {d.Country,d.City})
+            .Select(g=>g.FirstOrDefault(d=>!string.IsNullOrWhiteSpace(d.ImageUrl))??g.First())
+            .ToList();
         return View(new HomeViewModel
         {
-            Activities = (await activities.SearchAsync(new ActivitySearchViewModel())).Take(6).ToList(),
+            Destinations = destinations,
+            Activities = experiences.Take(6).ToList(),
             Categories = await categories.GetAllAsync(),
-            Centers = (await centers.GetAllAsync()).Take(3).ToList()
+            Centers = diveCenters.Take(3).ToList()
         });
     }
 

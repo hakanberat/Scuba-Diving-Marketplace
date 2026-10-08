@@ -1,14 +1,7 @@
-@{ ViewData["Title"]="Account created"; }
-<div class="row justify-content-center">
- <div class="col-md-7 col-lg-6">
-  <div class="card card-body text-center p-4 p-md-5">
-   <p class="text-success fw-semibold mb-2">Registration successful</p>
-   <h1 class="h2">Your account has been created</h1>
-   <p class="text-muted mb-4">You are now signed in and ready to book your next diving adventure.</p>
-   <div class="d-flex flex-wrap justify-content-center gap-2">
-    <a class="btn btn-primary" href="@ViewData["ReturnUrl"]">Continue</a>
-    <a class="btn btn-outline-secondary" asp-action="Profile">View your profile</a>
-   </div>
-  </div>
- </div>
-</div>
+﻿@{ ViewData["Title"]="Account created"; }
+<section class="success-page">
+ <span class="success-mark" aria-hidden="true">&#10003;</span>
+ <p class="eyebrow">Registration successful</p><h1>Your account has been created.</h1>
+ <p class="text-muted my-4">You're signed in. Your next underwater adventure starts here.</p>
+ <div class="d-flex flex-wrap justify-content-center gap-2"><a class="btn btn-primary" href="@ViewData["ReturnUrl"]">Continue exploring &rarr;</a><a class="btn btn-outline-primary" asp-action="Profile">View your profile</a></div>
+</section>

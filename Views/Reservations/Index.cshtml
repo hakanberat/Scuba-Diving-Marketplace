@@ -1,10 +1,12 @@
 @model List<Reservation>
 @{ var management=ViewData["Management"] is true; ViewData["Title"]=management ? "Center reservations" : "My reservations"; }
-<h1>@ViewData["Title"]</h1>
+@if(management) { <h1>@ViewData["Title"]</h1> }
+else { <div class="journey-heading"><p class="eyebrow">Your plans beneath the surface</p><h1>My diving adventures.</h1><p class="text-muted">Follow your requests and prepare for your next experience.</p></div> }
 @if(management)
 {
  <div class="d-flex flex-wrap gap-2 mb-4"><a class="btn btn-outline-secondary" asp-action="Index">All</a>
  @foreach(var status in new[]{"Pending","Confirmed","Rejected","Cancelled"}) { <a class="btn btn-outline-primary" asp-action="Index" asp-route-status="@status">@status</a> }
  </div>
 }
-<partial name="_ReservationTable" model="Model" />
+@if(management) { <partial name="_ReservationTable" model="Model" /> }
+else { <partial name="_CustomerReservationCards" model="Model" /> }

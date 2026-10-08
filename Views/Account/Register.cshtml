@@ -1,21 +1,17 @@
-@model RegisterViewModel
-@{ ViewData["Title"]="Register"; }
-<div class="row justify-content-center"><div class="col-md-7 col-lg-6">
-<h1 class="h2">Customer registration</h1><p>Own a dive school? <a asp-action="RegisterOwner">Apply as a school owner</a>.</p>
-<p class="text-muted">Create your customer account to reserve diving adventures.</p>
-<form asp-action="Register" method="post" class="card card-body">
- <input asp-for="ReturnUrl" type="hidden" />
- <div asp-validation-summary="All" class="text-danger"></div>
- <div class="row g-3 mb-3">
-  <div class="col-sm-6"><label asp-for="FirstName" class="form-label">First name</label><input asp-for="FirstName" class="form-control" autocomplete="given-name" /></div>
-  <div class="col-sm-6"><label asp-for="LastName" class="form-label">Last name</label><input asp-for="LastName" class="form-control" autocomplete="family-name" /></div>
+﻿@model RegisterViewModel
+@{ ViewData["Title"]="Create your account"; }
+<section class="account-shell">
+ <div class="account-story"><p class="eyebrow">Follow your curiosity</p><h2>A little adventure.<br />A new perspective.</h2><p>Discover dive centers, explore destinations and request your place on your next diving experience.</p><a asp-controller="Activities" asp-action="Index" class="section-link">Find your next dive &rarr;</a></div>
+ <div class="account-form"><p class="eyebrow">Start exploring</p><h1>Your next dive awaits.</h1><p class="text-muted">Create your customer account to reserve an experience.</p>
+ <form asp-action="Register" method="post">
+  <input asp-for="ReturnUrl" type="hidden" /><div asp-validation-summary="All" class="text-danger" role="alert"></div>
+  <div class="row g-3 mb-3"><div class="col-sm-6"><label asp-for="FirstName" class="form-label">First name</label><input asp-for="FirstName" class="form-control" autocomplete="given-name" /></div><div class="col-sm-6"><label asp-for="LastName" class="form-label">Last name</label><input asp-for="LastName" class="form-control" autocomplete="family-name" /></div></div>
+  <div class="mb-3"><label asp-for="Email" class="form-label"></label><input asp-for="Email" class="form-control" autocomplete="email" /></div>
+  <div class="mb-3"><label asp-for="Phone" class="form-label"></label><input asp-for="Phone" class="form-control" autocomplete="tel" /></div>
+  <div class="mb-3"><label asp-for="Password" class="form-label"></label><input asp-for="Password" class="form-control" autocomplete="new-password" minlength="10" maxlength="128" aria-describedby="password-help" /><small id="password-help" class="text-muted">Use 10–128 characters.</small></div>
+  <div class="mb-4"><label asp-for="ConfirmPassword" class="form-label">Confirm password</label><input asp-for="ConfirmPassword" class="form-control" autocomplete="new-password" /></div>
+  <button class="btn btn-primary w-100">Create account &rarr;</button>
+ </form><p class="account-switch">Already registered? <a asp-action="Login" asp-route-returnUrl="@Model.ReturnUrl">Log in</a></p><p class="small text-muted">Own a dive center? <a asp-action="RegisterOwner">Become a partner</a>.</p>
  </div>
- <div class="mb-3"><label asp-for="Email" class="form-label"></label><input asp-for="Email" class="form-control" autocomplete="email" /></div>
- <div class="mb-3"><label asp-for="Phone" class="form-label"></label><input asp-for="Phone" class="form-control" autocomplete="tel" /></div>
- <div class="mb-3"><label asp-for="Password" class="form-label"></label><input asp-for="Password" class="form-control" autocomplete="new-password" minlength="10" maxlength="128" /><small class="text-muted">Use 10–128 characters.</small></div>
- <div class="mb-3"><label asp-for="ConfirmPassword" class="form-label">Confirm password</label><input asp-for="ConfirmPassword" class="form-control" autocomplete="new-password" /></div>
- <button class="btn btn-primary">Create account</button>
-</form>
-<p class="mt-3">Already registered? <a asp-action="Login" asp-route-returnUrl="@Model.ReturnUrl">Login</a></p>
-</div></div>
+</section>
 @section Scripts { <partial name="_ValidationScriptsPartial" /> }

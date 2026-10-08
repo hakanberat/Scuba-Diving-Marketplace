@@ -1,0 +1,12 @@
+﻿@model IEnumerable<Reservation>
+<div class="row g-4">
+@foreach(var reservation in Model) {
+ <div class="col-md-6"><article class="customer-reservation-card">
+  <div class="d-flex justify-content-between align-items-center gap-3"><span class="small text-muted">@reservation.ReservationNumber</span><partial name="_ReservationStatus" model="reservation.Status" /></div>
+  <h2><a asp-action="Details" asp-route-id="@reservation.Id">@reservation.ActivityName</a></h2><p class="text-muted">With @reservation.DiveCenterName</p>
+  <div class="trip-facts"><div><span>Date</span><strong>@reservation.ReservationDate.ToString("dd MMM yyyy")</strong></div><div><span>Participants</span><strong>@reservation.Participants</strong></div><div><span>Total at reservation</span><strong>@reservation.TotalPrice.ToString("N2") @reservation.CurrencyCode</strong></div></div>
+  <a class="section-link" asp-action="Details" asp-route-id="@reservation.Id">View your reservation &rarr;</a>
+ </article></div>
+}
+</div>
+@if(!Model.Any()) { <div class="empty-state"><p class="eyebrow">Where will curiosity take you?</p><h2>Your next adventure starts here.</h2><p>Once you request an experience, you can follow your reservation here.</p><a class="btn btn-primary mt-4" asp-controller="Activities" asp-action="Index">Find your next dive &rarr;</a></div> }

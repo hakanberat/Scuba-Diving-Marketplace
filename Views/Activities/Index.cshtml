@@ -14,4 +14,5 @@
  </div>
  <div class="mt-2"><a asp-action="Index">Clear filters</a><small class="text-muted ms-3">Prices are shown in each activity's currency.</small></div>
 </form>
+<div class="listing-summary"><p><strong>@Model.Activities.Count</strong> @(Model.Activities.Count==1 ? "experience" : "experiences") to explore</p><p>Find a place. Meet your center. Make a plan.</p></div>
 <partial name="_ActivityCards" model="Model.Activities" />

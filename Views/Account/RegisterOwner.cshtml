@@ -1,7 +1,8 @@
 @model OwnerRegistrationViewModel
 @{ ViewData["Title"]="Dive center owner application"; }
-<div class="page-heading"><p class="eyebrow">For dive center owners</p><h1>Bring your dive school onboard</h1><p>Create your owner account and submit your school for admin approval.</p></div>
-<form asp-action="RegisterOwner" method="post" class="card card-body">
+<div class="owner-registration">
+<div class="page-heading"><p class="eyebrow">Share the places you know best</p><h1>Your expertise.<br />Their next adventure.</h1><p>Create your owner account and introduce your dive school. Your application will be reviewed before your center goes live.</p></div>
+<form asp-action="RegisterOwner" method="post" class="card card-body owner-form">
  <div asp-validation-summary="All" class="text-danger"></div>
  <h2 class="h4">Owner account</h2>
  <div class="row g-3 mb-4">
@@ -26,4 +27,5 @@
  <div><button class="btn btn-primary">Submit owner application</button></div>
 </form>
 <p class="mt-3">Looking to book a dive? <a asp-action="Register">Register as a customer</a>.</p>
+</div>
 @section Scripts { <partial name="_ValidationScriptsPartial" /> }

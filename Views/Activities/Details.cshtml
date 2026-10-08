@@ -1,24 +1,35 @@
-@model ActivityDetailsViewModel
-@{ ViewData["Title"]=Model.Activity.Name; }
-<a asp-action="Index" class="btn btn-outline-secondary mb-3">Back to activities</a>
-<div class="row g-4">
+﻿@model ActivityDetailsViewModel
+@{ ViewData["Title"]=Model.Activity.Name; var activity=Model.Activity; }
+<nav class="breadcrumb-nav" aria-label="Breadcrumb"><a asp-action="Index">Explore experiences</a><span aria-hidden="true">/</span><span>@activity.City, @activity.Country</span></nav>
+<header class="detail-heading">
+ <p class="eyebrow">@activity.CategoryName <span aria-hidden="true">&middot;</span> @activity.City, @activity.Country</p>
+ <h1>@activity.Name</h1>
+ <p>Discover with <a asp-controller="DiveCenters" asp-action="Details" asp-route-id="@activity.DiveCenterId">@activity.DiveCenterName &nearr;</a></p>
+</header>
+@if(Model.Photos.Any()) { <partial name="_PhotoGallery" model="Model.Photos" /> }
+else if(!string.IsNullOrWhiteSpace(activity.DisplayImageUrl)) { <img src="@activity.DisplayImageUrl" alt="@activity.Name" class="detail-cover" fetchpriority="high" /> }
+else { <div class="detail-cover media-fallback"><span>Explore beneath the surface</span></div> }
+<div class="row g-5 detail-columns">
  <div class="col-lg-8">
- @if(Model.Photos.Any()) { <partial name="_PhotoGallery" model="Model.Photos" /> }
- else if(!string.IsNullOrWhiteSpace(Model.Activity.MainImageUrl)) { <img src="@Model.Activity.MainImageUrl" alt="@Model.Activity.Name" class="img-fluid rounded mb-4 w-100 activity-detail-image" /> }
- <span class="badge text-bg-info mb-2">@Model.Activity.CategoryName</span>
- <h1>@Model.Activity.Name</h1>
- <p><a asp-controller="DiveCenters" asp-action="Details" asp-route-id="@Model.Activity.DiveCenterId">@Model.Activity.DiveCenterName</a> · @Model.Activity.City, @Model.Activity.Country</p>
- <p class="lead">@Model.Activity.ShortDescription</p>
- <p class="preserve-lines">@Model.Activity.Description</p>
-<partial name="_LocationMap" model="@(new MapViewModel { Name=Model.Activity.Name, Location=string.IsNullOrWhiteSpace(Model.Activity.MapLocation) ? MapViewModel.Resolve(Model.Activity.Location,Model.Activity.City,Model.Activity.Country) : Model.Activity.MapLocation })" />
- <h2 class="h5 mt-4">Included</h2><p class="preserve-lines">@Model.Activity.Included</p>
- <h2 class="h5">Not included</h2><p class="preserve-lines">@Model.Activity.NotIncluded</p>
- <h2 class="h5">Requirements</h2><p class="preserve-lines">@Model.Activity.Requirements</p>
+  <section class="editorial-section"><p class="lead">@activity.ShortDescription</p><h2>About this experience</h2><p class="preserve-lines">@activity.Description</p></section>
+  <section class="editorial-section"><h2>Your dive at a glance</h2><div class="experience-facts">
+   <div><span>Duration</span><strong>@(string.IsNullOrWhiteSpace(activity.Duration) ? "Ask the dive center" : activity.Duration)</strong></div>
+   <div><span>Group size</span><strong>@(activity.MaxParticipants.HasValue ? $"Up to {activity.MaxParticipants} participants" : "Ask the dive center")</strong></div>
+   <div><span>Minimum age</span><strong>@(activity.MinimumAge.HasValue ? $"{activity.MinimumAge} years" : "Not specified")</strong></div>
+   <div><span>Certification</span><strong>@(string.IsNullOrWhiteSpace(activity.MinimumCertification) ? "Not specified" : activity.MinimumCertification)</strong></div>
+  </div></section>
+  <section class="editorial-section"><h2>What to expect</h2><div class="row g-4">
+   <div class="col-md-6"><h3 class="h5 inclusion-title">What's included</h3><p class="preserve-lines">@(string.IsNullOrWhiteSpace(activity.Included) ? "Contact the dive center for details." : activity.Included)</p></div>
+   <div class="col-md-6"><h3 class="h5">What's not included</h3><p class="preserve-lines">@(string.IsNullOrWhiteSpace(activity.NotIncluded) ? "Contact the dive center for details." : activity.NotIncluded)</p></div>
+  </div></section>
+  <section class="editorial-section"><h2>Before you dive</h2><p class="preserve-lines">@(string.IsNullOrWhiteSpace(activity.Requirements) ? "Check with the dive center about preparation and requirements before your visit." : activity.Requirements)</p><p class="text-muted">Required certification: @(string.IsNullOrWhiteSpace(activity.MinimumCertification) ? "Not specified; check with your dive center." : activity.MinimumCertification)</p></section>
+  <partial name="_LocationMap" model="@(new MapViewModel { Name=activity.Name, Location=string.IsNullOrWhiteSpace(activity.MapLocation) ? MapViewModel.Resolve(activity.Location,activity.City,activity.Country) : activity.MapLocation })" />
+  <section class="editorial-section center-introduction"><p class="eyebrow">The people behind your dive</p><h2>@activity.DiveCenterName</h2><p>Get to know your dive center, meet the instructors and explore more of their experiences.</p><a class="btn btn-outline-primary" asp-controller="DiveCenters" asp-action="Details" asp-route-id="@activity.DiveCenterId">Explore the dive center &rarr;</a></section>
  </div>
- <aside class="col-lg-4"><div class="card shadow-sm"><div class="card-body">
-  <h2 class="h3">@Model.Activity.Price.ToString("N2") @Model.Activity.CurrencyCode</h2><p class="text-muted">Per participant</p>
-  <dl><dt>Location</dt><dd>@Model.Activity.Location</dd><dt>Duration</dt><dd>@Model.Activity.Duration</dd><dt>Minimum age</dt><dd>@(Model.Activity.MinimumAge?.ToString() ?? "Not specified")</dd><dt>Required certification</dt><dd>@(Model.Activity.MinimumCertification ?? "Not specified")</dd><dt>Maximum participants</dt><dd>@(Model.Activity.MaxParticipants?.ToString() ?? "Not specified")</dd></dl>
-  <a class="btn btn-primary w-100" asp-controller="Reservations" asp-action="Create" asp-route-activityId="@Model.Activity.Id">Reserve this activity</a>
-  <p class="small text-muted mt-3 mb-0">Your request is sent to the dive center for confirmation. No online payment is collected.</p>
- </div></div></aside>
+ <aside class="col-lg-4"><div class="booking-panel">
+  <span class="price-label">Your next adventure</span><h2 class="booking-price">@activity.Price.ToString("N2") <small>@activity.CurrencyCode</small></h2><p class="text-muted">per participant</p>
+  <div class="booking-facts"><div><span>Duration</span><strong>@(activity.Duration ?? "Ask the center")</strong></div><div><span>Maximum participants</span><strong>@(activity.MaxParticipants?.ToString() ?? "Not specified")</strong></div><div><span>Minimum age</span><strong>@(activity.MinimumAge?.ToString() ?? "Not specified")</strong></div><div><span>Certification</span><strong>@(activity.MinimumCertification ?? "Not specified")</strong></div></div>
+  <a class="btn btn-primary w-100" asp-controller="Reservations" asp-action="Create" asp-route-activityId="@activity.Id">Reserve this activity &rarr;</a>
+  <p class="booking-note">No online payment. Your dive center reviews and confirms your request.</p>
+ </div></aside>
 </div>

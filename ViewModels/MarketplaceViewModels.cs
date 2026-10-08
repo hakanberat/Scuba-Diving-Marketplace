@@ -21,9 +21,16 @@ public class DiveCenterDetailsViewModel
 }
 public class HomeViewModel
 {
+ public List<DestinationViewModel> Destinations { get; set; } = [];
  public List<DiveActivity> Activities { get; set; } = [];
  public List<ActivityCategory> Categories { get; set; } = [];
  public List<DiveCenter> Centers { get; set; } = [];
+}
+public class DestinationViewModel
+{
+ public string Country { get; set; } = "";
+ public string? City { get; set; }
+ public string? ImageUrl { get; set; }
 }
 public class ReservationCreateViewModel : IValidatableObject
 {

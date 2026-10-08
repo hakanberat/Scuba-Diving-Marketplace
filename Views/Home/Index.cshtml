@@ -1,39 +1,68 @@
-@model HomeViewModel
-@{ ViewData["Title"] = "Discover Your Next Dive"; }
-<section class="marketplace-hero">
+﻿@model HomeViewModel
+@{
+ ViewData["Title"]="Find your next dive";
+ var heroActivity=Model.Activities.FirstOrDefault(a=>!string.IsNullOrWhiteSpace(a.DisplayImageUrl));
+ var heroCenter=Model.Centers.FirstOrDefault(c=>!string.IsNullOrWhiteSpace(c.CoverPhotoUrl));
+ var heroImage=heroActivity?.DisplayImageUrl ?? heroCenter?.CoverPhotoUrl;
+ var destinations=Model.Destinations.Take(4).ToList();
+}
+<section class="marketplace-hero @(heroImage is null ? "hero-fallback" : "")">
+ @if(heroImage is not null) { <img class="hero-photo" src="@heroImage" alt="@(heroActivity?.Name ?? heroCenter?.Name)" fetchpriority="high" /> }
  <div class="hero-content">
-  <p class="eyebrow">A world waiting beneath the surface</p>
-  <h1>Discover your<br />next <span>dive.</span></h1>
-  <p class="hero-description">From your first breath underwater to your next great adventure. Explore courses, dives and trips with local dive centers.</p>
+  <p class="eyebrow">Explore beneath the surface</p>
+  <h1>Find your<br />next dive.</h1>
+  <p class="hero-description">A new destination. A different perspective.<br />Discover diving experiences with local dive centers.</p>
   <form asp-controller="Activities" asp-action="Index" method="get" class="hero-search">
-   <div><label for="home-search">What would you like to explore?</label><input id="home-search" name="Search" placeholder="Course, wreck dive, dive center..." /></div>
-   <div><label for="home-country">Destination</label><select id="home-country" name="Country" class="form-select"><option value="">All countries</option>@foreach(var country in CountryOptions.Get()) { <option value="@country.Value">@country.Text</option> }</select></div>
-   <button class="btn btn-primary">Find your dive <span aria-hidden="true">&rarr;</span></button>
+   <div><label for="home-country">Where to?</label><select id="home-country" name="Country" class="form-select"><option value="">Choose a destination</option>@foreach(var country in Model.Destinations.Select(d=>d.Country).Distinct().OrderBy(c=>c)) { <option value="@country">@country</option> }</select></div>
+   <div><label for="home-search">Your kind of adventure</label><input id="home-search" name="Search" placeholder="Courses, wreck dives, dive centers…" /></div>
+   <button class="btn btn-primary">Find my dive <span aria-hidden="true">&rarr;</span></button>
   </form>
-  <p class="hero-footnote">Browse freely. Create an account when you are ready to reserve.</p>
+  <p class="hero-footnote">Explore freely. Reserve when you find your adventure.</p>
  </div>
- <div class="hero-brand" aria-hidden="true"><div class="hero-orbit"></div><img src="~/images/brand/divehub-logo.png" alt="" /><span>Explore deeper.<br />Experience more.</span></div>
+ @if(heroActivity is not null) { <a class="hero-photo-credit" asp-controller="Activities" asp-action="Details" asp-route-id="@heroActivity.Id">Discover @heroActivity.City, @heroActivity.Country <span aria-hidden="true">&nearr;</span></a> }
 </section>
-<div class="discovery-benefits mb-5">
- <div><span class="benefit-number">01</span><div><strong>Find your adventure</strong><p>Courses, dives, tours and rentals.</p></div></div>
- <div><span class="benefit-number">02</span><div><strong>Meet your dive center</strong><p>Explore profiles and instructors.</p></div></div>
- <div><span class="benefit-number">03</span><div><strong>Reserve with confidence</strong><p>Send a request. Get center confirmation.</p></div></div>
+<div class="discovery-benefits">
+ <div><span class="benefit-number">01</span><div><strong>Find your kind of dive</strong><p>Explore experiences at your own pace.</p></div></div>
+ <div><span class="benefit-number">02</span><div><strong>Get to know your center</strong><p>Meet the people behind the adventure.</p></div></div>
+ <div><span class="benefit-number">03</span><div><strong>Request your place</strong><p>Your dive center confirms your reservation.</p></div></div>
 </div>
+@if(destinations.Any()) {
 <section class="discovery-section">
- <div class="section-heading"><div><p class="eyebrow">Go somewhere unforgettable</p><h2>Fresh adventures to explore</h2></div><a asp-controller="Activities" asp-action="Index" class="section-link">Explore all activities &rarr;</a></div>
+ <div class="section-heading"><div><p class="eyebrow">Let the destination inspire you</p><h2>Where will you dive next?</h2></div><a class="section-link" asp-controller="Activities" asp-action="Index">Explore destinations &rarr;</a></div>
+ <div class="destination-grid">
+ @foreach(var destination in destinations) {
+  var image=destination.ImageUrl;
+  <a class="destination-card @(image is null ? "media-fallback" : "")" asp-controller="Activities" asp-action="Index" asp-route-country="@destination.Country" asp-route-city="@destination.City">
+   @if(image is not null) { <img src="@image" alt="Diving in @destination.City, @destination.Country" loading="lazy" /> }
+   <div><span>@destination.Country</span><h3>@(string.IsNullOrWhiteSpace(destination.City) ? destination.Country : destination.City)</h3><span class="destination-link">Explore experiences &nearr;</span></div>
+  </a>
+ }
+ </div>
+</section>
+}
+<section class="discovery-section">
+ <div class="section-heading"><div><p class="eyebrow">A little curiosity goes a long way</p><h2>Fresh adventures to explore</h2></div><a asp-controller="Activities" asp-action="Index" class="section-link">All experiences &rarr;</a></div>
  <partial name="_ActivityCards" model="Model.Activities" />
 </section>
+@if(Model.Categories.Any()) {
 <section class="discovery-section category-section">
- <div class="section-heading"><div><p class="eyebrow">Your pace. Your passion.</p><h2>Find your kind of dive</h2></div></div>
+ <div class="section-heading"><div><p class="eyebrow">Your pace. Your passion.</p><h2>Find your kind of dive</h2></div><p class="section-intro">Follow your curiosity.<br />See where it takes you.</p></div>
  <div class="category-grid">
- @foreach(var category in Model.Categories) { <a class="category-tile" asp-controller="Activities" asp-action="Index" asp-route-categoryId="@category.Id"><span>@category.Name</span><span aria-hidden="true">&nearr;</span></a> }
+ @foreach(var category in Model.Categories) {
+  var image=Model.Activities.FirstOrDefault(a=>a.ActivityCategoryId==category.Id && !string.IsNullOrWhiteSpace(a.DisplayImageUrl))?.DisplayImageUrl;
+  <a class="category-tile @(image is null ? "category-fallback" : "")" asp-controller="Activities" asp-action="Index" asp-route-categoryId="@category.Id">
+   @if(image is not null) { <img src="@image" alt="" loading="lazy" /> }
+   <span>@category.Name</span><span aria-hidden="true">&nearr;</span>
+  </a>
+ }
  </div>
 </section>
+}
 <section class="discovery-section">
- <div class="section-heading"><div><p class="eyebrow">The people behind the experience</p><h2>Meet the dive centers</h2></div><a class="section-link" asp-controller="DiveCenters" asp-action="Index">All dive centers &rarr;</a></div>
+ <div class="section-heading"><div><p class="eyebrow">Local knowledge. Shared passion.</p><h2>Meet your next dive center</h2></div><a class="section-link" asp-controller="DiveCenters" asp-action="Index">All dive centers &rarr;</a></div>
  <partial name="_DiveCenterCards" model="Model.Centers" />
 </section>
 <section class="partner-banner">
- <div><p class="eyebrow">For dive centers</p><h2>Your expertise.<br />Their next adventure.</h2><p>Showcase your center, publish your activities and welcome your next divers.</p></div>
+ <div><p class="eyebrow">For dive center owners</p><h2>Your expertise.<br />Their next adventure.</h2><p>Bring your school to DiveMarketplace. Share the places and experiences you know best.</p></div>
  <a class="btn btn-light" asp-controller="Account" asp-action="RegisterOwner">List your dive center &rarr;</a>
 </section>

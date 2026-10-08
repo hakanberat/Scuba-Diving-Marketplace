@@ -1,67 +1,37 @@
-@model DiveCenterDetailsViewModel
-
-@{
-    ViewData["Title"] = Model.Center.Name;
-}
-
-<div class="container mt-4">
-    <a asp-action="Index" class="btn btn-outline-secondary mb-4">Back to dive centers</a>
-    <partial name="_PhotoGallery" model="Model.Photos" />
-
-    <div class="card shadow-sm">
-        <div class="card-body p-4">
-            <div class="row g-4">
-                @if (!string.IsNullOrWhiteSpace(Model.Center.LogoUrl))
-                {
-                    <div class="col-md-3">
-                        <img src="@Model.Center.LogoUrl" alt="@(Model.Center.Name) logo"
-                             class="img-fluid rounded" />
-                    </div>
-                }
-
-                <div class="col">
-                    <h1 class="mb-3">@Model.Center.Name</h1>
-                    <p class="mb-4" style="white-space: pre-line;">@Model.Center.Description</p>
-
-                    <dl class="row mb-0">
-                        <dt class="col-sm-3">City</dt>
-                        <dd class="col-sm-9">@Model.Center.City</dd>
-
-                        <dt class="col-sm-3">Country</dt>
-                        <dd class="col-sm-9">@Model.Center.Country</dd>
-
-                        <dt class="col-sm-3">Address</dt>
-                        <dd class="col-sm-9">@Model.Center.Address</dd>
-
-                        <dt class="col-sm-3">Phone</dt>
-                        <dd class="col-sm-9">@Model.Center.Phone</dd>
-
-                        <dt class="col-sm-3">Email</dt>
-                        <dd class="col-sm-9 text-break">@Model.Center.Email</dd>
-
-                        <dt class="col-sm-3">Website</dt>
-                        <dd class="col-sm-9 text-break">@Model.Center.Website</dd>
-                    </dl>
-                </div>
-            </div>
-        </div>
-    </div>
+﻿@model DiveCenterDetailsViewModel
+@{ ViewData["Title"]=Model.Center.Name; var center=Model.Center; }
+<nav class="breadcrumb-nav" aria-label="Breadcrumb"><a asp-action="Index">Dive centers</a><span aria-hidden="true">/</span><span>@center.City, @center.Country</span></nav>
+@if(Model.Photos.Any()) { <partial name="_PhotoGallery" model="Model.Photos" /> }
+else if(!string.IsNullOrWhiteSpace(center.CoverPhotoUrl)) { <img src="@center.CoverPhotoUrl" alt="@center.Name in @center.City" class="detail-cover" fetchpriority="high" /> }
+else { <div class="detail-cover center-cover media-fallback"><span>@center.City, @center.Country</span></div> }
+<header class="center-identity">
+ @if(!string.IsNullOrWhiteSpace(center.LogoUrl)) { <img src="@center.LogoUrl" alt="@(center.Name) logo" class="center-identity-logo" /> }
+ <div><p class="eyebrow">Your local dive experts &middot; @center.City, @center.Country</p><h1>@center.Name</h1><a class="section-link" href="#center-experiences">Explore their experiences &darr;</a></div>
+</header>
+<div class="row g-5">
+ <div class="col-lg-8"><section class="editorial-section"><h2>Get to know @center.Name</h2><p class="preserve-lines">@center.Description</p></section>
+ <partial name="_LocationMap" model="@(new MapViewModel { Name=center.Name, Location=string.IsNullOrWhiteSpace(center.MapLocation) ? MapViewModel.Resolve(center.Address,center.City,center.Country) : center.MapLocation })" />
+ </div>
+ <aside class="col-lg-4"><section class="contact-panel"><p class="eyebrow">Plan your visit</p><h2 class="h4">Let's talk diving</h2><p>Contact the center for local advice and help preparing your visit.</p>
+ @if(!string.IsNullOrWhiteSpace(center.Address)) { <div class="contact-item"><span>Find us</span><p>@center.Address<br />@center.City, @center.Country</p></div> }
+ @if(!string.IsNullOrWhiteSpace(center.Phone)) { <div class="contact-item"><span>Call the center</span><a href="tel:@center.Phone">@center.Phone</a></div> }
+ @if(!string.IsNullOrWhiteSpace(center.Email)) { <div class="contact-item"><span>Email the center</span><a href="mailto:@center.Email">@center.Email</a></div> }
+ @if(!string.IsNullOrWhiteSpace(center.Website)) {
+  var website=center.Website.StartsWith("https://",StringComparison.OrdinalIgnoreCase) || center.Website.StartsWith("http://",StringComparison.OrdinalIgnoreCase) ? center.Website : "https://"+center.Website;
+  <div class="contact-item"><span>Online</span><a href="@website" target="_blank" rel="noopener noreferrer">Visit their website &nearr;</a></div>
+ }
+ </section></aside>
 </div>
-<partial name="_LocationMap" model="@(new MapViewModel { Name=Model.Center.Name, Location=string.IsNullOrWhiteSpace(Model.Center.MapLocation) ? MapViewModel.Resolve(Model.Center.Address,Model.Center.City,Model.Center.Country) : Model.Center.MapLocation })" />
-<section class="mt-5 mb-4">
- <h2 class="h3">Meet the instructors</h2>
- <div class="row g-3">
- @foreach(var instructor in Model.Instructors)
- {
-  <div class="col-sm-6 col-lg-4"><div class="card card-body h-100">
-   @if(!string.IsNullOrWhiteSpace(instructor.PhotoUrl)) { <img src="@instructor.PhotoUrl" alt="@instructor.FirstName @instructor.LastName" class="img-fluid rounded mb-3 activity-image" loading="lazy" /> }
-   <h3 class="h5">@instructor.FirstName @instructor.LastName</h3><p class="text-muted">@instructor.CertificationAgency · @instructor.InstructorNumber</p><p class="preserve-lines">@instructor.Bio</p>
-  </div></div>
+<section class="discovery-section instructor-section">
+ <div class="section-heading"><div><p class="eyebrow">Shared passion. Local knowledge.</p><h2>Meet the instructors</h2></div></div>
+ <div class="row g-4">
+ @foreach(var instructor in Model.Instructors) {
+  <div class="col-sm-6 col-lg-4"><article class="instructor-card h-100">
+   @if(!string.IsNullOrWhiteSpace(instructor.PhotoUrl)) { <img src="@instructor.PhotoUrl" alt="@instructor.FirstName @instructor.LastName" class="instructor-photo" loading="lazy" /> }
+   <div><h3 class="h4">@instructor.FirstName @instructor.LastName</h3><p class="eyebrow">@instructor.CertificationAgency</p>@if(!string.IsNullOrWhiteSpace(instructor.InstructorNumber)) { <p class="small text-muted">Instructor @instructor.InstructorNumber</p> }<p class="preserve-lines">@instructor.Bio</p></div>
+  </article></div>
  }
  </div>
- @if(!Model.Instructors.Any()) { <p class="text-muted">No instructors listed yet.</p> }
+ @if(!Model.Instructors.Any()) { <p class="text-muted">The center hasn't added instructor profiles yet. Contact them to meet the team.</p> }
 </section>
-<section class="mt-5">
- <h2 class="h3 mb-3">Activities from @Model.Center.Name</h2>
- <partial name="_ActivityCards" model="Model.Activities" />
-</section>
+<section class="discovery-section" id="center-experiences"><div class="section-heading"><div><p class="eyebrow">Dive with @center.Name</p><h2>Find your next experience</h2></div></div><partial name="_ActivityCards" model="Model.Activities" /></section>

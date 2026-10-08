@@ -64,3 +64,24 @@
     setInterval(refresh, 30000);
     document.addEventListener('visibilitychange', () => { if (!document.hidden) refresh(); });
 })();
+
+// An estimate helps plan the trip; reservation prices remain server-authoritative.
+(() => {
+    const estimate = document.getElementById('reservation-estimate');
+    const participants = document.getElementById('Participants');
+    const date = document.getElementById('ReservationDate');
+    if (!estimate || !participants || !date) return;
+    const unitPrice = Number(estimate.dataset.unitPrice);
+    const numberFormat = new Intl.NumberFormat(document.documentElement.lang || 'en', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    function updateSummary() {
+        const count = Number(participants.value);
+        const validCount = participants.value !== '' && participants.validity.valid && Number.isInteger(count) && count > 0;
+        document.getElementById('reservation-participants-summary').textContent = validCount ? String(count) : 'Choose participants';
+        estimate.textContent = validCount && Number.isFinite(unitPrice) ? numberFormat.format(unitPrice * count) : '—';
+        const selectedDate = date.value ? new Date(`${date.value}T12:00:00`) : null;
+        document.getElementById('reservation-date-summary').textContent = selectedDate && !Number.isNaN(selectedDate.getTime()) ? selectedDate.toLocaleDateString(document.documentElement.lang || 'en', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Choose a date';
+    }
+    participants.addEventListener('input', updateSummary);
+    date.addEventListener('change', updateSummary);
+    updateSummary();
+})();

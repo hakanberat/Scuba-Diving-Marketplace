@@ -11,9 +11,10 @@
    <span class="experience-category">@activity.CategoryName</span>
    </div>
    <div class="card-body">
-    <p class="card-location">@activity.City<span> / </span>@activity.Country</p>
+    <p class="card-location">@activity.City<span>&middot;</span>@activity.Country</p>
     <h3 class="h5"><a class="stretched-link text-decoration-none" asp-controller="Activities" asp-action="Details" asp-route-id="@activity.Id">@activity.Name</a></h3>
     <p class="card-description">@activity.ShortDescription</p>
+    @if(!string.IsNullOrWhiteSpace(activity.Duration)) { <p class="card-duration">@activity.Duration</p> }
     <p class="center-credit">By @activity.DiveCenterName</p>
    </div>
    <div class="card-footer"><div><span class="price-label">Per participant</span><strong>@activity.Price.ToString("N2") <small>@activity.CurrencyCode</small></strong></div><span class="card-arrow" aria-hidden="true">&nearr;</span></div>
