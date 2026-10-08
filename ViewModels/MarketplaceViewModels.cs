@@ -21,6 +21,8 @@ public class DiveCenterDetailsViewModel
 }
 public class HomeViewModel
 {
+ public Dictionary<int, string?> CategoryImages { get; set; } = [];
+ public Dictionary<int, int> CategoryActivityCounts { get; set; } = [];
  public List<DestinationViewModel> Destinations { get; set; } = [];
  public List<DiveActivity> Activities { get; set; } = [];
  public List<ActivityCategory> Categories { get; set; } = [];

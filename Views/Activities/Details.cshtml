@@ -9,6 +9,7 @@
 @if(Model.Photos.Any()) { <partial name="_PhotoGallery" model="Model.Photos" /> }
 else if(!string.IsNullOrWhiteSpace(activity.DisplayImageUrl)) { <img src="@activity.DisplayImageUrl" alt="@activity.Name" class="detail-cover" fetchpriority="high" /> }
 else { <div class="detail-cover media-fallback"><span>Explore beneath the surface</span></div> }
+@if(!Model.Photos.Any() && activity.UsesRepresentativeImage) { <p class="photo-caption">Illustrative diving photo.</p> }
 <div class="row g-5 detail-columns">
  <div class="col-lg-8">
   <section class="editorial-section"><p class="lead">@activity.ShortDescription</p><h2>About this experience</h2><p class="preserve-lines">@activity.Description</p></section>

@@ -23,6 +23,8 @@ public class DiveCenter
 
     public string? LogoUrl { get; set; }
     public string? CoverPhotoUrl { get; set; }
+    public bool UsesRepresentativeImage => string.IsNullOrWhiteSpace(CoverPhotoUrl);
+    public string? DisplayImageUrl => UsesRepresentativeImage ? MarketplaceImages.ForCenter(Id) : CoverPhotoUrl!;
 
     public bool IsActive { get; set; } = true;
 

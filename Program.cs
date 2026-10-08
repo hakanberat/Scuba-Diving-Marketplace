@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
+MarketplaceImages.Configure(builder.Environment.ContentRootPath);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews(options =>

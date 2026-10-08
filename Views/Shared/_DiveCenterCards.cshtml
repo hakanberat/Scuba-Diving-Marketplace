@@ -4,8 +4,9 @@
 {
  <div class="col-sm-6 col-lg-4"><article class="card experience-card center-card h-100">
   <div class="experience-media">
-   @if(!string.IsNullOrWhiteSpace(center.CoverPhotoUrl)) { <img src="@center.CoverPhotoUrl" alt="@center.Name in @center.City" class="card-img-top activity-image" loading="lazy" /> }
+   @if(!string.IsNullOrWhiteSpace(center.DisplayImageUrl)) { <img src="@center.DisplayImageUrl" alt="@center.Name in @center.City" class="card-img-top activity-image" loading="lazy" /> }
    else { <div class="center-placeholder media-fallback"><span>Discover @center.City</span></div> }
+   @if(center.UsesRepresentativeImage) { <span class="representative-photo">Illustrative photo</span> }
    @if(!string.IsNullOrWhiteSpace(center.LogoUrl)) { <img class="center-card-logo" src="@center.LogoUrl" alt="@(center.Name) logo" loading="lazy" /> }
   </div>
   <div class="card-body"><p class="card-location">@center.City <span>&middot;</span> @center.Country</p><h3><a class="stretched-link text-decoration-none" asp-controller="DiveCenters" asp-action="Details" asp-route-id="@center.Id">@center.Name</a></h3><p class="card-description">@center.Description</p><span class="section-link">Explore center &rarr;</span></div>

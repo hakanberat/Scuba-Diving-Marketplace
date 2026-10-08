@@ -2,8 +2,9 @@
 @{ ViewData["Title"]=Model.Center.Name; var center=Model.Center; }
 <nav class="breadcrumb-nav" aria-label="Breadcrumb"><a asp-action="Index">Dive centers</a><span aria-hidden="true">/</span><span>@center.City, @center.Country</span></nav>
 @if(Model.Photos.Any()) { <partial name="_PhotoGallery" model="Model.Photos" /> }
-else if(!string.IsNullOrWhiteSpace(center.CoverPhotoUrl)) { <img src="@center.CoverPhotoUrl" alt="@center.Name in @center.City" class="detail-cover" fetchpriority="high" /> }
+else if(!string.IsNullOrWhiteSpace(center.DisplayImageUrl)) { <img src="@center.DisplayImageUrl" alt="@center.Name in @center.City" class="detail-cover" fetchpriority="high" /> }
 else { <div class="detail-cover center-cover media-fallback"><span>@center.City, @center.Country</span></div> }
+@if(!Model.Photos.Any() && center.UsesRepresentativeImage) { <p class="photo-caption">Illustrative diving photo.</p> }
 <header class="center-identity">
  @if(!string.IsNullOrWhiteSpace(center.LogoUrl)) { <img src="@center.LogoUrl" alt="@(center.Name) logo" class="center-identity-logo" /> }
  <div><p class="eyebrow">Your local dive experts &middot; @center.City, @center.Country</p><h1>@center.Name</h1><a class="section-link" href="#center-experiences">Explore their experiences &darr;</a></div>

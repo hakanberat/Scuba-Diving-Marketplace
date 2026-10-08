@@ -2,8 +2,8 @@
 @{
  ViewData["Title"]="Find your next dive";
  var heroActivity=Model.Activities.FirstOrDefault(a=>!string.IsNullOrWhiteSpace(a.DisplayImageUrl));
- var heroCenter=Model.Centers.FirstOrDefault(c=>!string.IsNullOrWhiteSpace(c.CoverPhotoUrl));
- var heroImage=heroActivity?.DisplayImageUrl ?? heroCenter?.CoverPhotoUrl;
+ var heroCenter=Model.Centers.FirstOrDefault(c=>!string.IsNullOrWhiteSpace(c.DisplayImageUrl));
+ var heroImage=heroActivity?.DisplayImageUrl ?? heroCenter?.DisplayImageUrl;
  var destinations=Model.Destinations.Take(4).ToList();
 }
 <section class="marketplace-hero @(heroImage is null ? "hero-fallback" : "")">
@@ -46,13 +46,14 @@
 </section>
 @if(Model.Categories.Any()) {
 <section class="discovery-section category-section">
- <div class="section-heading"><div><p class="eyebrow">Your pace. Your passion.</p><h2>Find your kind of dive</h2></div><p class="section-intro">Follow your curiosity.<br />See where it takes you.</p></div>
+ <div class="section-heading"><div><p class="eyebrow">Your pace. Your passion.</p><h2>Find your kind of dive</h2></div><a class="section-link" asp-controller="Activities" asp-action="Index">Explore all dive experiences &rarr;</a></div>
  <div class="category-grid">
  @foreach(var category in Model.Categories) {
-  var image=Model.Activities.FirstOrDefault(a=>a.ActivityCategoryId==category.Id && !string.IsNullOrWhiteSpace(a.DisplayImageUrl))?.DisplayImageUrl;
+  var image=Model.CategoryImages.GetValueOrDefault(category.Id);
+  var count=Model.CategoryActivityCounts.GetValueOrDefault(category.Id);
   <a class="category-tile @(image is null ? "category-fallback" : "")" asp-controller="Activities" asp-action="Index" asp-route-categoryId="@category.Id">
    @if(image is not null) { <img src="@image" alt="" loading="lazy" /> }
-   <span>@category.Name</span><span aria-hidden="true">&nearr;</span>
+   <span class="category-label">@category.Name<small>@(count == 0 ? "Explore this category" : $"{count} {(count == 1 ? "experience" : "experiences")}")</small></span><span aria-hidden="true">&rarr;</span>
   </a>
  }
  </div>

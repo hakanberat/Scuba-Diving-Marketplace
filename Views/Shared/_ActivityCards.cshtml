@@ -8,6 +8,7 @@
    @if(!string.IsNullOrWhiteSpace(activity.DisplayImageUrl))
    { <img src="@activity.DisplayImageUrl" alt="@activity.Name" class="card-img-top activity-image" loading="lazy" /> }
    else { <div class="image-placeholder"><span aria-hidden="true">&sim;</span><span>Discover beneath the surface</span></div> }
+   @if(activity.UsesRepresentativeImage) { <span class="representative-photo">Illustrative photo</span> }
    <span class="experience-category">@activity.CategoryName</span>
    </div>
    <div class="card-body">

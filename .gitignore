@@ -482,3 +482,7 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+# Stable runtime assignments for representative listing photos
+App_Data/representative-photos.json
+App_Data/representative-photos.json.tmp

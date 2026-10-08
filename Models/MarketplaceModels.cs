@@ -42,7 +42,8 @@ public class DiveActivity
     public string? Requirements { get; set; }
     public string? MainImageUrl { get; set; }
     public string? CoverPhotoUrl { get; set; }
-    public string? DisplayImageUrl => CoverPhotoUrl ?? MainImageUrl;
+    public bool UsesRepresentativeImage => string.IsNullOrWhiteSpace(CoverPhotoUrl) && string.IsNullOrWhiteSpace(MainImageUrl);
+    public string? DisplayImageUrl => !string.IsNullOrWhiteSpace(CoverPhotoUrl) ? CoverPhotoUrl : !string.IsNullOrWhiteSpace(MainImageUrl) ? MainImageUrl : MarketplaceImages.ForActivity(Id, CategoryName);
     public bool IsActive { get; set; } = true;
     public string CategoryName { get; set; } = "";
     public string DiveCenterName { get; set; } = "";
