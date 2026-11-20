@@ -1,0 +1,16 @@
+@model Reservation
+<section class="card contact-summary mb-4">
+    <div class="card-body">
+        <p class="eyebrow">Customer communication</p>
+        <h2 class="h4">Preferred contact methods</h2>
+        <partial name="_ContactPreferences" model="Model" />
+        <dl class="row mt-3 mb-0">
+            <dt class="col-sm-4">Email @(Model.ContactByEmail ? "(preferred)" : "")</dt>
+            <dd class="col-sm-8 text-break">@if(!string.IsNullOrWhiteSpace(Model.ContactEmail)) { <a href="mailto:@Model.ContactEmail">@Model.ContactEmail</a> } else { <span>Not supplied on this reservation</span> }</dd>
+            <dt class="col-sm-4">Phone @(Model.ContactByPhone ? "(preferred)" : "")</dt>
+            <dd class="col-sm-8">@if(!string.IsNullOrWhiteSpace(Model.ContactPhone)) { <a href="tel:@Model.ContactPhone">@Model.ContactPhone</a> } else { <span>Not supplied on this reservation</span> }</dd>
+            <dt class="col-sm-4">WhatsApp @(Model.ContactByWhatsApp ? "(preferred)" : "")</dt>
+            <dd class="col-sm-8">@if(!string.IsNullOrWhiteSpace(Model.ContactWhatsApp)) { var digits=new string(Model.ContactWhatsApp.Where(char.IsAsciiDigit).ToArray()); <a href="https://wa.me/@digits" target="_blank" rel="noopener noreferrer">@Model.ContactWhatsApp</a> } else { <span>Not supplied</span> }</dd>
+        </dl>
+    </div>
+</section>

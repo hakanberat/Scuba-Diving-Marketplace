@@ -1,0 +1,18 @@
+@model CenterEditViewModel
+@{ var action=Model.Id==0 ? "Create" : "Edit"; ViewData["Title"]=action; }
+<h1 class="h2">@action</h1>
+@if(Model.Id > 0) { <a class="btn btn-outline-primary mb-3" asp-controller="Photos" asp-action="Center" asp-route-id="@Model.Id">Manage photos</a> }
+else { <p class="text-muted">Save the profile first, then add gallery photos.</p> }
+<form asp-action="@action" asp-route-id="@Model.Id" method="post" class="card card-body">
+<input asp-for="Id" type="hidden" /><div class="mb-3"><label asp-for="MapLocation" class="form-label">Google Maps location</label><input asp-for="MapLocation" class="form-control" placeholder="Google Maps share link, full address or coordinates" /><span asp-validation-for="MapLocation" class="text-danger"></span><small class="text-muted">Paste your Google Maps share link or enter a precise address / coordinates. Required when creating a school.</small></div><div asp-validation-summary="All" class="text-danger"></div><div class="mb-3"><label asp-for="Name" class="form-label">Name</label><input asp-for="Name" class="form-control" /><span asp-validation-for="Name" class="text-danger"></span></div>
+<div class="mb-3"><label asp-for="Description" class="form-label">Description</label><textarea asp-for="Description" class="form-control" rows="4"></textarea><span asp-validation-for="Description" class="text-danger"></span></div>
+<div class="mb-3"><label asp-for="Country" class="form-label">Country</label><select asp-for="Country" asp-items="CountryOptions.Get(Model.Country)" class="form-select"><option value="">Select country</option></select><span asp-validation-for="Country" class="text-danger"></span></div>
+<div class="mb-3"><label asp-for="City" class="form-label">City</label><input asp-for="City" class="form-control" /><span asp-validation-for="City" class="text-danger"></span></div>
+<div class="mb-3"><label asp-for="Address" class="form-label">Address</label><input asp-for="Address" class="form-control" /><span asp-validation-for="Address" class="text-danger"></span></div>
+<div class="mb-3"><label asp-for="Phone" class="form-label">Phone</label><input asp-for="Phone" class="form-control" /><span asp-validation-for="Phone" class="text-danger"></span></div>
+<div class="mb-3"><label asp-for="Email" class="form-label">Email</label><input asp-for="Email" class="form-control" /><span asp-validation-for="Email" class="text-danger"></span></div>
+<div class="mb-3"><label asp-for="Website" class="form-label">Website</label><input asp-for="Website" type="text" class="form-control" placeholder="www.example.com (optional)" /><span asp-validation-for="Website" class="text-danger"></span></div>
+<div class="mb-3"><label asp-for="LogoUrl" class="form-label">Logo Url</label><input asp-for="LogoUrl" class="form-control" /><span asp-validation-for="LogoUrl" class="text-danger"></span></div>
+<div><button class="btn btn-primary">Save</button><a asp-action="Index" class="btn btn-outline-secondary ms-2">Back</a></div>
+</form>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

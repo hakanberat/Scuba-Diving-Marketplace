@@ -1,0 +1,22 @@
+@if(User.IsInRole("Admin") || User.IsInRole("DiveCenter"))
+{
+ <nav class="management-navigation card card-body mb-4" aria-label="Management">
+ <strong class="mb-2">@(User.IsInRole("Admin") ? "Administration" : "Dive center management")</strong>
+ <div class="d-flex flex-wrap gap-2">
+ @if(User.IsInRole("Admin")) {
+  <a class="btn btn-outline-primary btn-sm" asp-controller="Admin" asp-action="Index">Admin dashboard</a>
+  <a class="btn btn-outline-primary btn-sm" asp-controller="Admin" asp-action="Centers">Dive centers</a>
+  <a class="btn btn-outline-primary btn-sm" asp-controller="Admin" asp-action="Users">Users</a>
+  <a class="btn btn-outline-primary btn-sm" asp-controller="Admin" asp-action="Owners">School owners</a>
+  <a class="btn btn-outline-primary btn-sm" asp-controller="Admin" asp-action="Applications">Owner applications</a>
+  <a class="btn btn-outline-primary btn-sm" asp-controller="Admin" asp-action="Categories">Categories</a>
+  <a class="btn btn-outline-primary btn-sm" asp-controller="Admin" asp-action="AssignCenterUser">Assign center access</a>
+ }
+ <a class="btn btn-outline-primary btn-sm" asp-controller="Dashboard" asp-action="Index">Overview</a>
+ <a class="btn btn-outline-primary btn-sm" asp-controller="ManageActivities" asp-action="Index">Activities</a>
+ <a class="btn btn-outline-primary btn-sm" asp-controller="Instructors" asp-action="Index">Manage instructors</a>
+ <a class="btn btn-outline-primary btn-sm" asp-controller="Reservations" asp-action="Index">Manage reservations</a>
+ <a class="btn btn-outline-primary btn-sm" asp-controller="CenterProfile" asp-action="Index">Center profiles</a>
+ <a class="btn btn-outline-primary btn-sm" asp-controller="Account" asp-action="Profile">My profile</a>
+ </div></nav>
+}

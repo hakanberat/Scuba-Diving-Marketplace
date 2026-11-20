@@ -1,0 +1,12 @@
+@model List<Instructor>
+@{ ViewData["Title"]="Manage instructors"; }
+<h1 class="h2">Manage instructors</h1><a class="btn btn-primary mb-3" asp-action="Create">Add instructor</a>
+<div class="table-responsive"><table class="table align-middle"><thead><tr><th>Name</th><th>Agency</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+@foreach(var item in Model) {
+ <tr><td>@item.FirstName @item.LastName</td><td>@item.CertificationAgency</td><td>@(item.IsActive ? "Active" : "Inactive")</td><td>
+ <a class="btn btn-sm btn-outline-primary" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+ <form asp-action="SetActive" method="post" class="d-inline" onsubmit="return confirm('Change instructor visibility?');"><input type="hidden" name="id" value="@item.Id" /><input type="hidden" name="active" value="@((!item.IsActive).ToString())" /><button class="btn btn-sm btn-outline-secondary">@(item.IsActive ? "Deactivate" : "Activate")</button></form>
+ </td></tr>
+}
+</tbody></table></div>
+@if(!Model.Any()) { <p>No instructors yet. Create a dive center profile before adding instructors.</p> }

@@ -1,0 +1,29 @@
+@model IEnumerable<Reservation>
+@{ var showContact=User.IsInRole("DiveCenter") || User.IsInRole("Admin"); }
+<div class="table-responsive">
+<table class="table table-hover align-middle">
+ <thead><tr><th>Reservation</th><th>Activity / center</th><th>Date</th><th>Participants</th><th>Total</th><th>Status</th>@if(showContact) { <th>Customer / contact preference</th> }</tr></thead>
+ <tbody>
+ @foreach(var item in Model)
+ {
+  <tr>
+   <td><a asp-controller="Reservations" asp-action="Details" asp-route-id="@item.Id">@item.ReservationNumber</a></td>
+   <td>@item.ActivityName<br /><small class="text-muted">@item.DiveCenterName</small></td>
+   <td>@item.ReservationDate.ToString("dd MMM yyyy")</td><td>@item.Participants</td>
+   <td>@item.TotalPrice.ToString("N2") @item.CurrencyCode</td>
+   <td><partial name="_ReservationStatus" model="item.Status" /></td>
+   @if(showContact)
+   {
+    <td class="reservation-contact-cell"><strong class="d-block mb-2">@item.CustomerName</strong><partial name="_ContactPreferences" model="item" />
+     @if(item.ContactByEmail && !string.IsNullOrWhiteSpace(item.ContactEmail)) { <a class="d-block small mt-2" href="mailto:@item.ContactEmail">@item.ContactEmail</a> }
+     @if(item.ContactByPhone && !string.IsNullOrWhiteSpace(item.ContactPhone)) { <a class="d-block small mt-2" href="tel:@item.ContactPhone">@item.ContactPhone</a> }
+     @if(item.ContactByWhatsApp && !string.IsNullOrWhiteSpace(item.ContactWhatsApp)) { <span class="d-block small mt-2">WhatsApp: @item.ContactWhatsApp</span> }
+     <a class="d-block small mt-2" asp-controller="Reservations" asp-action="Details" asp-route-id="@item.Id">Contact details &rarr;</a>
+    </td>
+   }
+  </tr>
+ }
+ </tbody>
+</table>
+</div>
+@if(!Model.Any()) { <p class="text-muted">No reservations found.</p> }

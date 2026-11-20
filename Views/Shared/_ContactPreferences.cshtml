@@ -1,0 +1,8 @@
+@model Reservation
+<div class="contact-preferences">
+    @if(Model.ContactByEmail) { <span class="badge text-bg-primary">Email</span> }
+    @if(Model.ContactByPhone) { <span class="badge text-bg-primary">Phone call</span> }
+    @if(Model.ContactByWhatsApp) { <span class="badge text-bg-success">WhatsApp</span> }
+    @if(!Model.ContactByEmail && !Model.ContactByPhone && !Model.ContactByWhatsApp)
+    { <span class="text-muted small">Contact preference not recorded for this reservation.</span> }
+</div>
