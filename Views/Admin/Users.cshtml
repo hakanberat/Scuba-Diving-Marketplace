@@ -1,0 +1,6 @@
+@model List<AppUser>
+@{ ViewData["Title"]="Admin · Users"; }
+<h1 class="h2">@(ViewData["Owners"] is true ? "Dive school owners" : "Users")</h1>
+<div class="table-responsive"><table class="table"><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th></th></tr></thead><tbody>
+@foreach(var user in Model) { <tr><td>@user.FirstName @user.LastName</td><td>@user.Email</td><td>@user.Role</td><td>@(user.IsActive ? "Active" : "Inactive")</td><td><a asp-action="EditUser" asp-route-id="@user.Id">Edit</a></td></tr> }
+</tbody></table></div>

@@ -1,0 +1,23 @@
+﻿@model List<Photo>
+@if(Model.Any())
+{
+ var galleryId="gallery-"+Model[0].Id;
+ <section class="photo-gallery" aria-label="Photo gallery">
+  <div class="gallery-grid gallery-count-@Math.Min(Model.Count,5)">
+  @foreach(var photo in Model.Take(5)) {
+   <button type="button" class="gallery-tile" data-bs-toggle="modal" data-bs-target="#@galleryId" aria-label="Open photo gallery: @(photo.Caption ?? "Diving photograph")">
+    <img src="@photo.ImageUrl" alt="@(photo.Caption ?? "Diving photograph")" loading="@(photo==Model[0] ? "eager" : "lazy")" />
+   </button>
+  }
+  </div>
+  <button type="button" class="btn btn-light gallery-open" data-bs-toggle="modal" data-bs-target="#@galleryId">View all @Model.Count photos</button>
+ </section>
+ <div class="modal fade" id="@galleryId" tabindex="-1" aria-labelledby="@galleryId-title" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable"><div class="modal-content">
+   <div class="modal-header"><h2 class="modal-title h5" id="@galleryId-title">Photo gallery</h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close gallery"></button></div>
+   <div class="modal-body gallery-full">
+   @foreach(var photo in Model) { <figure><img src="@photo.ImageUrl" alt="@(photo.Caption ?? "Diving photograph")" class="img-fluid" loading="lazy" />@if(!string.IsNullOrWhiteSpace(photo.Caption)) { <figcaption>@photo.Caption</figcaption> }</figure> }
+   </div>
+  </div></div>
+ </div>
+}

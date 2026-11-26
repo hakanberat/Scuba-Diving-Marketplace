@@ -1,0 +1,13 @@
+@model DashboardViewModel
+@{ ViewData["Title"]="Dive center dashboard"; }
+<h1 class="mb-4">Dive center dashboard</h1>
+<div class="row g-3 mb-4">
+@foreach(var metric in new[]{("Active activities",Model.ActiveActivities),("Active instructors",Model.Instructors),("Pending requests",Model.Pending),("Confirmed",Model.Confirmed),("Upcoming confirmed",Model.Upcoming)})
+{
+ <div class="col-sm-6 col-lg"><div class="card card-body h-100"><span class="text-muted">@metric.Item1</span><strong class="display-6">@metric.Item2</strong></div></div>
+}
+</div>
+@if(!Model.Centers.Any()) { <p>You have no assigned dive centers. <a asp-controller="Account" asp-action="ApplicationStatus">Check your application</a> or ask an administrator to assign access.</p> }
+<partial name="_ReservationRevenue" model="Model.Revenue" />
+<h2 class="h4">Latest reservations</h2>
+<partial name="_ReservationTable" model="Model.LatestReservations" />

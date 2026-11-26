@@ -1,0 +1,5 @@
+@model List<Notification>
+@{ ViewData["Title"]="Notifications"; }
+<div class="section-heading"><h1 class="h2">Notifications</h1><form asp-action="MarkAllRead" method="post"><button class="btn btn-outline-primary btn-sm">Mark all as read</button></form></div>
+<div class="d-flex gap-2 mb-3"><a class="btn btn-outline-primary" asp-action="Index">Unread</a><a class="btn btn-outline-secondary" asp-action="Index" asp-route-history="true">History / all</a></div>
+<div id="notification-list" data-refresh-url="@Url.Action("List",new {history=ViewData["History"] is true})"><partial name="_NotificationList" model="Model" /></div>

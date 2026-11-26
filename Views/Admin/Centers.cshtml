@@ -1,0 +1,11 @@
+@model List<DiveCenter>
+@{ ViewData["Title"]="Admin · Dive centers"; }
+<h1 class="h2">Dive centers</h1><div class="d-flex gap-2 mb-3"><a asp-controller="CenterProfile" asp-action="Create" class="btn btn-primary">Create center</a><a asp-action="AssignCenterUser" class="btn btn-outline-primary">Assign center access</a></div>
+<div class="table-responsive"><table class="table align-middle"><thead><tr><th>Name</th><th>Location</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+@foreach(var center in Model) {
+ <tr><td>@center.Name</td><td>@center.City, @center.Country</td><td>@(center.IsActive ? "Active" : "Inactive")</td><td>
+ <a class="btn btn-sm btn-outline-primary" asp-controller="CenterProfile" asp-action="Edit" asp-route-id="@center.Id">Edit</a>
+ <form asp-action="SetCenterActive" method="post" class="d-inline" onsubmit="return confirm('Change public visibility and booking availability for this center?');"><input name="id" type="hidden" value="@center.Id" /><input name="active" type="hidden" value="@((!center.IsActive).ToString())" /><button class="btn btn-sm btn-outline-secondary">@(center.IsActive ? "Deactivate" : "Activate")</button></form>
+ </td></tr>
+}
+</tbody></table></div>

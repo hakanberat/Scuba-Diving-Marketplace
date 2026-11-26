@@ -1,0 +1,41 @@
+@model ReservationCreateViewModel
+@{ ViewData["Title"]="Request reservation"; }
+<div class="journey-heading"><p class="eyebrow">Your next underwater adventure</p><h1>Make a plan to dive.</h1><p class="text-muted">Choose your date and group. Your dive center will confirm the details.</p></div>
+<div class="row g-5"><div class="col-lg-7">
+<form asp-action="Create" method="post" class="card card-body reservation-form">
+ <input asp-for="ActivityId" type="hidden" />
+ <div asp-validation-summary="All" class="text-danger"></div>
+ <div class="mb-3"><label asp-for="ReservationDate" class="form-label">Date</label><input asp-for="ReservationDate" class="form-control" type="date" min="@DateTime.Today.ToString("yyyy-MM-dd")" /></div>
+ <div class="mb-3"><label asp-for="Participants" class="form-label"></label><input asp-for="Participants" class="form-control" min="1" max="@(Model.Activity?.MaxParticipants ?? 10000)" /></div>
+ <div class="mb-3"><label asp-for="CustomerNotes" class="form-label">Notes for the dive center</label><textarea asp-for="CustomerNotes" class="form-control" rows="4"></textarea></div>
+
+ <fieldset class="mt-4 mb-4">
+  <legend class="h5">Your contact details</legend>
+  <p class="small text-muted">The dive center will use these details for this reservation. Include country codes in phone numbers.</p>
+  <div class="mb-3"><label asp-for="ContactEmail" class="form-label">Email</label><input asp-for="ContactEmail" type="email" autocomplete="email" class="form-control" /><span asp-validation-for="ContactEmail" class="text-danger"></span></div>
+  <div class="mb-3"><label asp-for="ContactPhone" class="form-label">Phone number</label><input asp-for="ContactPhone" type="tel" autocomplete="tel" placeholder="+90 ..." class="form-control" /><span asp-validation-for="ContactPhone" class="text-danger"></span></div>
+  <div class="mb-3"><label asp-for="ContactWhatsApp" class="form-label">WhatsApp number</label><input asp-for="ContactWhatsApp" type="tel" placeholder="+90 ..." class="form-control" /><span asp-validation-for="ContactWhatsApp" class="text-danger"></span><small class="text-muted">Required if you select WhatsApp. You may use the same number as your phone.</small></div>
+  <fieldset><legend class="h6">How should the dive center contact you?</legend><p class="small text-muted">Select one or more options.</p>
+   <div class="d-flex flex-wrap gap-4">
+    <div class="form-check"><input asp-for="ContactByEmail" class="form-check-input" /><label asp-for="ContactByEmail" class="form-check-label">Email</label></div>
+    <div class="form-check"><input asp-for="ContactByPhone" class="form-check-input" /><label asp-for="ContactByPhone" class="form-check-label">Phone call</label></div>
+    <div class="form-check"><input asp-for="ContactByWhatsApp" class="form-check-input" /><label asp-for="ContactByWhatsApp" class="form-check-label">WhatsApp</label></div>
+   </div>
+  </fieldset>
+ </fieldset>
+ <button class="btn btn-primary">Submit reservation request</button>
+</form>
+</div><aside class="col-lg-5"><div class="reservation-summary">
+ @if(!string.IsNullOrWhiteSpace(Model.Activity?.DisplayImageUrl)) { <img class="reservation-summary-image" src="@Model.Activity.DisplayImageUrl" alt="@Model.Activity.Name" /> }
+ else { <div class="reservation-summary-image media-fallback"><span>Your next dive awaits</span></div> }
+ <div class="reservation-summary-body">
+ <p class="card-location">@Model.Activity?.City &middot; @Model.Activity?.Country</p>
+ <h2>@Model.Activity?.Name</h2><p class="text-muted">With @Model.Activity?.DiveCenterName</p>
+ <p class="fw-semibold">@Model.Activity?.Price.ToString("N2") @Model.Activity?.CurrencyCode <small class="text-muted">per participant</small></p>
+ <div class="booking-facts"><div><span>Your date</span><strong id="reservation-date-summary">@Model.ReservationDate.ToString("dd MMM yyyy")</strong></div><div><span>Participants</span><strong id="reservation-participants-summary">@Model.Participants</strong></div></div>
+ <div class="estimate-row"><span>Estimated total</span><strong><span id="reservation-estimate" data-unit-price="@(Model.Activity?.Price.ToString(System.Globalization.CultureInfo.InvariantCulture))">@((Model.Activity?.Price * Model.Participants)?.ToString("N2"))</span> @Model.Activity?.CurrencyCode</strong></div>
+ <p class="small text-muted mt-3">Estimated from the current price. Your reservation will show the price recorded when you submit your request.</p>
+ <p class="booking-note">No online payment. The dive center reviews and confirms your request.</p>
+ </div>
+</div></aside></div>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

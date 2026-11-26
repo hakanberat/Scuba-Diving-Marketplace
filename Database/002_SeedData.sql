@@ -1,0 +1,15 @@
+USE DiveMarketplaceDb;
+IF NOT EXISTS(SELECT 1 FROM dbo.ActivityCategories WHERE Slug='scuba-course') INSERT dbo.ActivityCategories(Name,Slug) VALUES('Scuba Course','scuba-course');
+IF NOT EXISTS(SELECT 1 FROM dbo.ActivityCategories WHERE Slug='try-dive') INSERT dbo.ActivityCategories(Name,Slug) VALUES('Try Dive','try-dive');
+IF NOT EXISTS(SELECT 1 FROM dbo.ActivityCategories WHERE Slug='fun-dive') INSERT dbo.ActivityCategories(Name,Slug) VALUES('Fun Dive','fun-dive');
+IF NOT EXISTS(SELECT 1 FROM dbo.ActivityCategories WHERE Slug='boat-dive') INSERT dbo.ActivityCategories(Name,Slug) VALUES('Boat Dive','boat-dive');
+IF NOT EXISTS(SELECT 1 FROM dbo.ActivityCategories WHERE Slug='shore-dive') INSERT dbo.ActivityCategories(Name,Slug) VALUES('Shore Dive','shore-dive');
+IF NOT EXISTS(SELECT 1 FROM dbo.ActivityCategories WHERE Slug='night-dive') INSERT dbo.ActivityCategories(Name,Slug) VALUES('Night Dive','night-dive');
+IF NOT EXISTS(SELECT 1 FROM dbo.ActivityCategories WHERE Slug='wreck-dive') INSERT dbo.ActivityCategories(Name,Slug) VALUES('Wreck Dive','wreck-dive');
+IF NOT EXISTS(SELECT 1 FROM dbo.ActivityCategories WHERE Slug='deep-dive') INSERT dbo.ActivityCategories(Name,Slug) VALUES('Deep Dive','deep-dive');
+IF NOT EXISTS(SELECT 1 FROM dbo.ActivityCategories WHERE Slug='technical-dive') INSERT dbo.ActivityCategories(Name,Slug) VALUES('Technical Dive','technical-dive');
+IF NOT EXISTS(SELECT 1 FROM dbo.ActivityCategories WHERE Slug='specialty-dive') INSERT dbo.ActivityCategories(Name,Slug) VALUES('Specialty Dive','specialty-dive');
+IF NOT EXISTS(SELECT 1 FROM dbo.ActivityCategories WHERE Slug='dive-tour') INSERT dbo.ActivityCategories(Name,Slug) VALUES('Dive Tour','dive-tour');
+IF NOT EXISTS(SELECT 1 FROM dbo.ActivityCategories WHERE Slug='liveaboard') INSERT dbo.ActivityCategories(Name,Slug) VALUES('Liveaboard','liveaboard');
+IF NOT EXISTS(SELECT 1 FROM dbo.ActivityCategories WHERE Slug='equipment-rental') INSERT dbo.ActivityCategories(Name,Slug) VALUES('Equipment Rental','equipment-rental');
+IF NOT EXISTS(SELECT 1 FROM dbo.ActivityCategories WHERE Slug='other') INSERT dbo.ActivityCategories(Name,Slug) VALUES('Other','other');
